@@ -99,6 +99,14 @@
       <DependentUpon>StudyDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="StudyDetail\StudyDetailViewModel.cs" />
+    <Compile Include="StudyEditor\StudyEditorView.xaml.cs">
+      <DependentUpon>StudyEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudyEditor\StudyEditorViewModel.cs" />
+    <Compile Include="StudyGrid\StudyGridView.xaml.cs">
+      <DependentUpon>StudyGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudyGrid\StudyGridViewModel.cs" />
     <Compile Include="StudySearch\StudySearchView.xaml.cs">
       <DependentUpon>StudySearchView.xaml</DependentUpon>
     </Compile>
@@ -119,6 +127,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StudyDetail\StudyDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyEditor\StudyEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyGrid\StudyGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

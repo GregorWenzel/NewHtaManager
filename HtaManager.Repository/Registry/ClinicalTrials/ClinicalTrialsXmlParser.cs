@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -11,9 +12,11 @@ namespace HtaManager.Repository
 {
     public class ClinicalTrialsXmlParser : XmlParser
     {
+        List<EndpointDescriptor> endpointDescriptorList;
 
-        public ClinicalTrialsXmlParser()
+        public ClinicalTrialsXmlParser(List<EndpointDescriptor> endpointDescriptorList)
         {
+            this.endpointDescriptorList = endpointDescriptorList;
         }
 
         public Study Parse(XmlDocument doc)
@@ -58,7 +61,7 @@ namespace HtaManager.Repository
                 newIntervention.Description = ParseSingleNode(intervention, "./Field[@Name='InterventionDescription']");
                 newIntervention.Type = InterventionParser.Parse(ParseSingleNode(intervention, "./Field[@Name='InterventionType']"));
 
-                armList = intervention.SelectNodes("./List[@Name='InterventionArmGroupLabelList']");
+                armList = intervention.SelectNodes("./List[@Name='InterventionArmGroupLabelList']/Field");
                 foreach (XmlNode armNode in armList)
                 {
                     if (result.StudyArmList.Any(item => item.Title == armNode.InnerText))
@@ -70,7 +73,7 @@ namespace HtaManager.Repository
                 }
             }
 
-            result.StudyArmList = result.StudyArmList.OrderBy(item => item.Type).ToList();
+            result.StudyArmList = result.StudyArmList.OrderBy(item => item.Title).ToList();
         }
 
         private void ParseConditionsModule(ref Study result)
@@ -190,7 +193,7 @@ namespace HtaManager.Repository
                 newEndpoint.TimeFrame = ParseSingleNode(outcome, "./Field[@Name='PrimaryOutcomeTimeFrame']");
                 newEndpoint.Name = ParseSingleNode(outcome, "./Field[@Name='PrimaryOutcomeMeasure']");
                 newEndpoint.Study = result;
-                //newEndpoint.EndpointType = new EndpointTypeParser().Parse(newEndpoint);
+                newEndpoint.EndpointDescriptor = GetEndpointDescriptor(newEndpoint);
             }
 
             outcomeList = outcomesModule.SelectNodes("./List[@Name='SecondaryOutcomeList']/Struct");
@@ -202,8 +205,33 @@ namespace HtaManager.Repository
                 newEndpoint.TimeFrame = ParseSingleNode(outcome, "./Field[@Name='SecondaryOutcomeTimeFrame']");
                 newEndpoint.Name = ParseSingleNode(outcome, "./Field[@Name='SecondaryOutcomeMeasure']");
                 newEndpoint.Study = result;
-                // newEndpoint.EndpointType = container.Resolve<IGlobals>(). new EndpointTypeParser().Parse(newEndpoint);
+                newEndpoint.EndpointDescriptor = GetEndpointDescriptor(newEndpoint);
             }
+        }
+
+        private EndpointDescriptor GetEndpointDescriptor(OutcomeMeasure outcome)
+        {
+            StringBuilder sb = new StringBuilder(outcome.Name.ToLower());
+            sb.Replace("diagnosis of a", "");
+            sb.Replace("diangosis of", "");
+            sb.Replace("diagnosis of the", "");
+            string cleanedOutcomeName = Regex.Replace(sb.ToString(), @" ?\(.*?\)", string.Empty);
+
+            string[] forbiddenWordArr = new string[] { "during", "within" };
+
+            foreach (string forbiddenWord in forbiddenWordArr)
+            {
+                int redundantIndex = cleanedOutcomeName.IndexOf(forbiddenWord);
+                if (redundantIndex > 0)
+                {
+                    cleanedOutcomeName = cleanedOutcomeName.Substring(0, redundantIndex);
+                }
+            }
+                       
+            cleanedOutcomeName = cleanedOutcomeName.Trim();
+
+            var result = endpointDescriptorList.FirstOrDefault(item => item.NameEN.ToLower() == outcome.Name.ToLower() || item.ChildList.Any(child => child.NameEN.ToLower() == outcome.Name.ToLower()));
+            return null;
         }
 
         private void ParseSponsorModule(ref Study result)

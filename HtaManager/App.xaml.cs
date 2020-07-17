@@ -1,6 +1,8 @@
 ﻿using HtaManager.GUI;
 using HtaManager.GUI.SplashScreen;
 using HtaManager.GUI.StudyDetail;
+using HtaManager.GUI.StudyEditor;
+using HtaManager.GUI.StudyGrid;
 using HtaManager.GUI.StudySearch;
 using HtaManager.Infrastructure;
 using HtaManager.Infrastructure.Domain;
@@ -34,9 +36,10 @@ namespace HtaManager
         {
             ViewModelLocationProvider.Register(typeof(MainWindow).ToString(), typeof(MainWindowViewModel));
             ViewModelLocationProvider.Register(typeof(SplashScreenView).ToString(), typeof(SplashScreenViewModel));
+            ViewModelLocationProvider.Register(typeof(StudyGridView).ToString(), typeof(StudyGridViewModel));
             ViewModelLocationProvider.Register(typeof(StudySearchView).ToString(), typeof(StudySearchViewModel));
             ViewModelLocationProvider.Register(typeof(StudyDetailView).ToString(), typeof(StudyDetailViewModel));
-
+            ViewModelLocationProvider.Register(typeof(StudyEditorView).ToString(), typeof(StudyEditorViewModel));
 
             containerRegistry.Register<IRegistryRepository, ClinicalTrialsRegistryRepository>("ClinicalTrials");
             containerRegistry.Register<IPublicationRepository, PubmedPublicationRepository>("Pubmed");
@@ -45,6 +48,10 @@ namespace HtaManager
             containerRegistry.Register<IEndpointRepository, MySqlEndpointRepository>();
 
             containerRegistry.Register<object, StudySearchView>("StudySearchView");
+            containerRegistry.Register<object, StudyGridView>("StudyGridView");
+            //containerRegistry.Register<object, StudyEditorView>("StudyGridView");
+
+
         }
 
         protected override void OnInitialized()

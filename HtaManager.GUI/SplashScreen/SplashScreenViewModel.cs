@@ -50,7 +50,7 @@ namespace HtaManager.GUI.SplashScreen
 
             if (Progress == MaxProgress)
             {
-                regionManager.RequestNavigate(RegionNames.ContentRegion, "StudySearchView");
+                regionManager.RequestNavigate(RegionNames.ContentRegion, "StudyGridView");
             }
         }
 

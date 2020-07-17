@@ -31,7 +31,7 @@ namespace HtaManager.Repository
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlString);
 
-            ClinicalTrialsXmlParser parser = new ClinicalTrialsXmlParser();
+            ClinicalTrialsXmlParser parser = new ClinicalTrialsXmlParser(container.Resolve<List<EndpointDescriptor>>());
             Study study = parser.Parse(doc);
 
             return study;

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Unity;
 
 namespace HtaManager.Repository.Endpoint
@@ -25,14 +26,24 @@ namespace HtaManager.Repository.Endpoint
 
         public List<EndpointDescriptor> GetEndpointDescriptorList()
         {
+            endpointDescriptorList.Clear();
             List<EndpointDescriptor> buffer = new List<EndpointDescriptor>();
 
             Connect();
 
             MySqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM endpoint_type ORDER BY endpoint_type_id";
+            cmd.CommandText = "SELECT * FROM endpoint_descriptor ORDER BY endpoint_descriptor_id";
 
-            HtaMySqlDataReader reader = new HtaMySqlDataReader(cmd.ExecuteReader());
+            HtaMySqlDataReader reader = null;
+            try
+            {
+                reader = new HtaMySqlDataReader(cmd.ExecuteReader());
+            }
+            catch
+            {
+                MessageBox.Show("Datenbankfehler.", "", MessageBoxButton.OK);
+                return buffer;
+            }
 
             while (reader.Read())
             {
@@ -79,21 +90,21 @@ namespace HtaManager.Repository.Endpoint
             string cmdText = "";
             if (EndpointDescriptor.Id > 0)
             {
-                cmdPrefix = "UPDATE endpoint_type SET";
-                cmdSuffix = $" WHERE endpoint_type_id = {EndpointDescriptor.Id}";
+                cmdPrefix = "UPDATE endpoint_descriptor SET";
+                cmdSuffix = $" WHERE endpoint_descriptor_id = {EndpointDescriptor.Id}";
             }
             else
             {
-                cmdPrefix = "INSERT INTO endpoint_type SET";
+                cmdPrefix = "INSERT INTO endpoint_descriptor SET";
             }
 
 
-            cmdText = cmdPrefix + " endpoint_type_name = ?endpoint_type_name, abbreviation = ?abbreviation, parent_id = ?parent_id, endpoint_type_dimension = ?endpoint_type_dimension" + cmdSuffix;
+            cmdText = cmdPrefix + " endpoint_descriptor_name = ?endpoint_descriptor_name, abbreviation = ?abbreviation, parent_id = ?parent_id, endpoint_descriptor_dimension = ?endpoint_descriptor_dimension" + cmdSuffix;
 
             MySqlCommand cmd = connection.CreateCommand();
             cmd.CommandText = cmdText;
 
-            cmd.Parameters.AddWithValue("?endpoint_type_name", EndpointDescriptor.Name);
+            cmd.Parameters.AddWithValue("?endpoint_descriptor_name", EndpointDescriptor.Name);
             cmd.Parameters.AddWithValue("?abbreviation", EndpointDescriptor.Abbreviation);
             if (EndpointDescriptor.Parent != null)
             {
@@ -104,7 +115,7 @@ namespace HtaManager.Repository.Endpoint
                 cmd.Parameters.AddWithValue("?parent_id", null);
 
             }
-            cmd.Parameters.AddWithValue("?endpoint_type_dimension", EndpointDescriptor.Dimension.ToString().ToLower());
+            cmd.Parameters.AddWithValue("?endpoint_descriptor_dimension", EndpointDescriptor.Dimension.ToString().ToLower());
 
             int rowCount = cmd.ExecuteNonQuery();
 
@@ -119,7 +130,7 @@ namespace HtaManager.Repository.Endpoint
             Connect();
 
             MySqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = $"DELETE FROM endpoint_type WHERE endpoint_type_id={EndpointDescriptor.Id}";
+            cmd.CommandText = $"DELETE FROM endpoint_descriptor WHERE endpoint_descriptor_id={EndpointDescriptor.Id}";
             int rowCount = cmd.ExecuteNonQuery();
 
             Disconnect();
@@ -131,12 +142,12 @@ namespace HtaManager.Repository.Endpoint
         {
             EndpointDescriptor result = new EndpointDescriptor();
 
-            result.Id = reader.GetInt32("endpoint_type_id");
-            result.Name = reader.GetString("endpoint_type_name");
+            result.Id = reader.GetInt32("endpoint_descriptor_id");
+            result.Name = reader.GetString("endpoint_descriptor_name");
             result.Abbreviation = reader.GetString("abbreviation");
-            result.Dimension = (EndpointDimensionType)Enum.Parse(typeof(EndpointDimensionType), reader.GetString("endpoint_type_dimension").ToUpper());
+            result.Dimension = (EndpointDimensionType)Enum.Parse(typeof(EndpointDimensionType), reader.GetString("endpoint_descriptor_dimension").ToUpper());
             result.ParentId = reader.GetInt32("parent_id");
-            result.NameEN = reader.GetString("endpoint_type_name_en");
+            result.NameEN = reader.GetString("endpoint_descriptor_shorthand");
             result.AbbreviationEN = reader.GetString("abbreviation_en");
 
             return result;

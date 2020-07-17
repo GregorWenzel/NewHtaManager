@@ -61,6 +61,16 @@ namespace HtaManager.Infrastructure.Domain
             set => SetProperty(ref interventionDescription, value);
         }
 
+        public string InterventionNameLabel
+        {
+            get => string.Join(",", InterventionList.Select(item => item.Name));
+        }
+           
+        public string InterventionTypeLabel
+        {
+            get => InterventionTypeString.Resolve[InterventionType];
+        }
+
         public StudyArmViewModel()
         {
             InterventionList = new ObservableCollection<InterventionViewModel>();

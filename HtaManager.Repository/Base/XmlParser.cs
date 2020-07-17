@@ -28,7 +28,7 @@ namespace HtaManager.Repository.Base
         public DateTime ParseDateTimeNode(XmlNode node, string Path)
         {
             DateTime result = new DateTime();
-            if (node.SelectSingleNode(Path) is object)
+            if (node is object && node.SelectSingleNode(Path) is object)
             {
                 DateTime.TryParse(node.SelectSingleNode(Path).InnerText, out result);
             }
@@ -38,7 +38,7 @@ namespace HtaManager.Repository.Base
 
         public string ParseSingleNode(XmlNode node, string Path)
         {
-            if (node.SelectSingleNode(Path) is object)
+            if (node is object && node.SelectSingleNode(Path) is object)
             {
                 return node.SelectSingleNode(Path).InnerText;
             }

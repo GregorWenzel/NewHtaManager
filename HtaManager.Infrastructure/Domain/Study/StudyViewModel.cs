@@ -185,6 +185,17 @@ namespace HtaManager.Infrastructure.Domain
             }
         }
 
+        public StudyViewModel()
+        {
+            ConditionList = new ObservableCollection<ConditionViewModel>();
+            Design = new StudyDesignViewModel();
+            EndpointList = new ObservableCollection<OutcomeMeasure>();
+            KeywordList = new ObservableCollection<string>();
+            PublicationList = new ObservableCollection<PublicationViewModel>();
+            SecondaryIndentifierList = new ObservableCollection<string>();
+            StudyArmList = new ObservableCollection<StudyArmViewModel>();
+        }
+
         public StudyViewModel(Study study)
         {
             this.ActualPrimaryCompletionDate = study.ActualPrimaryCompletionDate;

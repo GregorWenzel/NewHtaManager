@@ -1,0 +1,201 @@
+﻿<UserControl x:Class="HtaManager.GUI.StudyEditor.StudyEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HtaManager.GUI.StudyEditor"
+             xmlns:domain="clr-namespace:HtaManager.Infrastructure.Domain;assembly=HtaManager.Infrastructure"
+             xmlns:prism="http://prismlibrary.com/"              
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="900">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="DarkGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="AliceBlue">
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+                <Grid.Resources>
+                    <Style TargetType="TextBox">
+            <Setter Property="Height" Value="25"/>
+        </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="75"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Content="Titel"/>
+                <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding SelectedStudy.FullTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                       FontWeight="Bold" TextWrapping="Wrap" Margin="5" FontStyle="Italic" AcceptsReturn="True"/>
+                <Label Grid.Column="0" Grid.Row="1" Content="Kurzitel"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding SelectedStudy.ShortTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                       FontWeight="Bold" TextWrapping="Wrap" Margin="5" FontStyle="Italic" AcceptsReturn="True"/>
+                <Label Grid.Column="0" Grid.Row="2" Content="NCT ID"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding SelectedStudy.NctId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        FontWeight="Bold" TextWrapping="Wrap" Margin="5" FontStyle="Italic" AcceptsReturn="True"/>
+                <Button Grid.Row="2" Grid.Column="3" Content="Laden" Command="{Binding LoadNctCommand}" Height="25" Margin="0,0,5,0"/>
+            </Grid>
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="254" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="28"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" Padding="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                            <RowDefinition Height="28"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="150" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Studiendesign" Background="LightGray"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Phase:" FontWeight="Normal"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedStudy.Design.PhaseString}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Typ:" FontWeight="Normal"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedStudy.Design.Type}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Modell:" FontWeight="Normal"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedStudy.Design.ModelString}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="Randomisierung:" FontWeight="Normal"/>
+                        <ComboBox Grid.Row="4" Grid.Column="1" 
+                                  ItemsSource="{Binding Source={x:Static domain:StudyAllocationTypeString.Resolve}}" 
+                                  SelectedItem="{Binding Allocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
+                        
+                        <Label Grid.Row="5" Grid.Column="0" Content="Maskierung:" FontWeight="Normal"/>
+                        <Grid Grid.Row="5" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ToggleButton Grid.Column="0" Content="P" IsThreeState="False" ToolTip="Verblindete Patienten" IsChecked="{Binding ArePatientsBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
+                            <ToggleButton Grid.Column="1" Content="Ä" IsThreeState="False" ToolTip="Verblindete Prüfärzte"  IsChecked="{Binding AreInvestigatorsBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
+                            <ToggleButton Grid.Column="2" Content="B" IsThreeState="False" ToolTip="Verblindete Betreuer"  IsChecked="{Binding AreCareProvidersBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
+                            <ToggleButton Grid.Column="3" Content="O" IsThreeState="False" ToolTip="Verblindete Outcome-Erheber"  IsChecked="{Binding AreOutcomeAssessorsBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
+                            <ToggleButton Grid.Column="4" Content="?" IsThreeState="False" ToolTip="Verblindung unbekannt"  IsChecked="{Binding IsBlindingUnknown, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
+
+                        </Grid>
+                        
+                        <Label Grid.Row="6" Grid.Column="0" Content="Ziel:" FontWeight="Normal"/>
+                        <ComboBox Grid.Row="6" Grid.Column="1" 
+                                  ItemsSource="{Binding Source={x:Static domain:StudyPurposeTypeString.Resolve}}" 
+                                  SelectedItem="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0">
+                    <Label Content="Evidenzgrad" Background="LightGray"/>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="0">
+                    <TextBox Text="{Binding EvidenceGradeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Border>
+                <Border Grid.Row="3" Grid.Column="0">
+                    <Label Content="Vertrauen in Effekte" Background="LightGray"/>
+                </Border>
+                <Border Grid.Row="4" Grid.Column="0">
+                    <TextBlock Text="{Binding EffectGradeText}"/>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="{Binding SelectedStudy.Design.PopulationString, UpdateSourceTrigger=PropertyChanged, FallbackValue=Population}" Background="LightGray"/>
+                        <ScrollViewer Grid.Row="1" >
+                            <TextBox TextWrapping="Wrap" Text="{Binding SelectedStudy.Design.EligibilityText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="2" Grid.RowSpan="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="Interventionen" Background="LightGray"/>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <telerik:RadGridView Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding SelectedStudy.StudyArmList}" ShowGroupPanel="False" AutoGenerateColumns="False">
+                                <telerik:RadGridView.Columns>
+                                    <telerik:GridViewDataColumn Header="Arm" DataMemberBinding="{Binding Title}"/>
+                                    <telerik:GridViewDataColumn Header="Typ" DataMemberBinding="{Binding InterventionTypeLabel}"/>
+                                    <telerik:GridViewDataColumn Header="Intervention" DataMemberBinding="{Binding Description}"/>
+                                </telerik:RadGridView.Columns>
+                            </telerik:RadGridView>
+                            <Button Grid.Row="1" Grid.Column="2" Content="+" Height="25" Width="25" Command="{Binding AddStudyArm}" HorizontalAlignment="Right"/>
+                            <Button Grid.Row="1" Grid.Column="1" Content="-" Height="25" Width="25" Command="{Binding AddStudyArm}" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="3" Grid.RowSpan="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="Endpunkte" Background="LightGray"/>
+                        <TextBlock Grid.Row="1" TextWrapping="Wrap" Text="{Binding SelectedStudy.EndpointText}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</UserControl>
