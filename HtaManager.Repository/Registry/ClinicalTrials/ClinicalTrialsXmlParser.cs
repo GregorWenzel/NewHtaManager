@@ -113,14 +113,19 @@ namespace HtaManager.Repository
                 XmlNodeList observationalModelList = designModule.SelectNodes("./Struct[@Name='DesignInfo']/List[@Name='DesignObservationalModelList']/Field");
                 XmlNodeList observationalTimePerspectiveList = designModule.SelectNodes("./Struct[@Name='DesignInfo']/List[@Name='DesignTimePerspectiveList']/Field");
 
+                StudyObservationalModelType[] modelTypeArr = new StudyObservationalModelType[observationalModelList.Count];
+                StudyTimePerspectiveType[] timeArr = new StudyTimePerspectiveType[observationalModelList.Count];
                 for (int i=0; i<observationalModelList.Count; i++)
                 {
                     XmlNode modelNode = observationalModelList[i];
                     XmlNode timeperspectiveNode = observationalTimePerspectiveList[i];
 
-                    result.Design.ObservationalModelList.Add(StudyObservationalModelParser.Parse(modelNode.InnerText));
-                    result.Design.TimePerspectiveList.Add(StudyTimePerspectiveParser.Parse(timeperspectiveNode.InnerText));
+                    modelTypeArr[i] = StudyObservationalModelParser.Parse(modelNode.InnerText);
+                    timeArr[i] = StudyTimePerspectiveParser.Parse(timeperspectiveNode.InnerText);
                 }
+
+                result.Design.ObservationalModel = modelTypeArr.FirstOrDefault();
+                result.Design.TimePerspective = timeArr.FirstOrDefault();
 
                 result.Design.InterventionModel = StudyInterventionModelType.NONE;
             }
@@ -131,9 +136,11 @@ namespace HtaManager.Repository
             }
 
             XmlNodeList phaseList = designModule.SelectNodes("./List[@Name='PhaseList']/Field");
-            foreach (XmlNode phase in phaseList)
+            StudyPhaseType[] phaseArr = new StudyPhaseType[phaseList.Count];
+            for (int i=0; i<phaseArr.Length; i++)
             {
-                result.Design.PhaseList.Add(StudyPhaseParser.Parse(phase.InnerText));
+                XmlNode phase = phaseList[i];
+                phaseArr[i] = StudyPhaseParser.Parse(phase.InnerText);
             }
 
             result.Design.DurationPlanned = ParseSingleNode(designModule, "./Field[@Name='TargetDuration']");            
@@ -183,6 +190,8 @@ namespace HtaManager.Repository
         private void ParseOutocmesModule(ref Study result)
         {
             XmlNode outcomesModule = doc.SelectSingleNode("/FullStudiesResponse/FullStudyList/FullStudy/Struct/Struct[@Name='ProtocolSection']/Struct[@Name='OutcomesModule']");
+
+            if (outcomesModule == null) return;
 
             XmlNodeList outcomeList = outcomesModule.SelectNodes("./List[@Name='PrimaryOutcomeList']/Struct");
             foreach (XmlNode outcome in outcomeList)

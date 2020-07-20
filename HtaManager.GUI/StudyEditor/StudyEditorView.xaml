@@ -7,6 +7,7 @@
              xmlns:domain="clr-namespace:HtaManager.Infrastructure.Domain;assembly=HtaManager.Infrastructure"
              xmlns:prism="http://prismlibrary.com/"              
              xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:gui="clr-namespace:HtaManager.GUI;assembly=HtaManager.GUI"            
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="900">
@@ -77,60 +78,7 @@
                     <RowDefinition Height="28"/>
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Grid.Column="0" Padding="2">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="28"/>
-                            <RowDefinition Height="28"/>
-                            <RowDefinition Height="28"/>
-                            <RowDefinition Height="28"/>
-                            <RowDefinition Height="28"/>
-                            <RowDefinition Height="28"/>
-                            <RowDefinition Height="28"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="150" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Studiendesign" Background="LightGray"/>
-                        <Label Grid.Row="1" Grid.Column="0" Content="Phase:" FontWeight="Normal"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedStudy.Design.PhaseString}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
-
-                        <Label Grid.Row="2" Grid.Column="0" Content="Typ:" FontWeight="Normal"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedStudy.Design.Type}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
-
-                        <Label Grid.Row="3" Grid.Column="0" Content="Modell:" FontWeight="Normal"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedStudy.Design.ModelString}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
-
-                        <Label Grid.Row="4" Grid.Column="0" Content="Randomisierung:" FontWeight="Normal"/>
-                        <ComboBox Grid.Row="4" Grid.Column="1" 
-                                  ItemsSource="{Binding Source={x:Static domain:StudyAllocationTypeString.Resolve}}" 
-                                  SelectedItem="{Binding Allocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
-                        
-                        <Label Grid.Row="5" Grid.Column="0" Content="Maskierung:" FontWeight="Normal"/>
-                        <Grid Grid.Row="5" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <ToggleButton Grid.Column="0" Content="P" IsThreeState="False" ToolTip="Verblindete Patienten" IsChecked="{Binding ArePatientsBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
-                            <ToggleButton Grid.Column="1" Content="Ä" IsThreeState="False" ToolTip="Verblindete Prüfärzte"  IsChecked="{Binding AreInvestigatorsBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
-                            <ToggleButton Grid.Column="2" Content="B" IsThreeState="False" ToolTip="Verblindete Betreuer"  IsChecked="{Binding AreCareProvidersBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
-                            <ToggleButton Grid.Column="3" Content="O" IsThreeState="False" ToolTip="Verblindete Outcome-Erheber"  IsChecked="{Binding AreOutcomeAssessorsBlinded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
-                            <ToggleButton Grid.Column="4" Content="?" IsThreeState="False" ToolTip="Verblindung unbekannt"  IsChecked="{Binding IsBlindingUnknown, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" Height="25"/>
-
-                        </Grid>
-                        
-                        <Label Grid.Row="6" Grid.Column="0" Content="Ziel:" FontWeight="Normal"/>
-                        <ComboBox Grid.Row="6" Grid.Column="1" 
-                                  ItemsSource="{Binding Source={x:Static domain:StudyPurposeTypeString.Resolve}}" 
-                                  SelectedItem="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
-                    </Grid>
+                    <ContentControl prism:RegionManager.RegionName="{x:Static gui:RegionNames.StudyDesignRegion}" />
                 </Border>
                 <Border Grid.Row="1" Grid.Column="0">
                     <Label Content="Evidenzgrad" Background="LightGray"/>

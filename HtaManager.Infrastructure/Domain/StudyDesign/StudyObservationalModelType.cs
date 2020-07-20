@@ -26,7 +26,7 @@ namespace HtaManager.Infrastructure.Domain
             {
                 case "Cohort":
                     return StudyObservationalModelType.COHORT;
-                case "Case Control":
+                case "Case-Control":
                     return StudyObservationalModelType.CASE_CONTROL;
                 case "Case Only":
                     return StudyObservationalModelType.CASE_ONLY;

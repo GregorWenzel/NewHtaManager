@@ -20,21 +20,22 @@ namespace HtaManager.Infrastructure.Domain
         public string MinAge { get; set; }
         public string ModelDescription { get; set; }
         public string ModelString { get; }
-        public List<StudyObservationalModelType> ObservationalModelList { get; set; }
-        public List<StudyPhaseType> PhaseList { get; set; }
+        public StudyObservationalModelType ObservationalModel { get; set; }
+        public StudyPhaseType Phase { get; set; }
         public string PhaseString { get; }
         public StudyPurposeType Purpose { get; set; }
         public string PurposeString { get; }
         public string RandomizationString { get; }
-        public List<StudyTimePerspectiveType> TimePerspectiveList { get; set; }
+        public StudyTimePerspectiveType TimePerspective { get; set; }
         public string Type { get; set; }
 
         public StudyDesign()
         {
             MaskedPersonList = new List<StudyMaskedPersonType>();
-            ObservationalModelList = new List<StudyObservationalModelType>();
-            PhaseList = new List<StudyPhaseType>();
-            TimePerspectiveList = new List<StudyTimePerspectiveType>();
+            ObservationalModel = StudyObservationalModelType.UNKNOWN;
+            InterventionModel = StudyInterventionModelType.UNKNOWN;
+            Phase = StudyPhaseType.UNKNOWN;
+            TimePerspective = StudyTimePerspectiveType.UNKNOWN;
         }
     }
 }

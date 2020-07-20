@@ -17,11 +17,11 @@ namespace HtaManager.Infrastructure.Domain
             set => SetProperty(ref purpose, value);
         }
 
-        private ObservableCollection<StudyPhaseType> phaseList;
-        public ObservableCollection<StudyPhaseType> PhaseList
+        private StudyPhaseType phase;
+        public StudyPhaseType Phase
         {
-            get => phaseList;
-            set => SetProperty(ref phaseList, value);
+            get => phase;
+            set => SetProperty(ref phase, value);
         }
 
         private string eligibilityText;
@@ -33,17 +33,7 @@ namespace HtaManager.Infrastructure.Domain
 
         public string PhaseString
         {
-            get
-            {
-                if (PhaseList != null && PhaseList.Count > 0)
-                {
-                    return string.Join(", ", PhaseList.Select(item => StudyPhaseTypeTypeString.Resolve[item]));
-                }
-                else
-                {
-                    return "N/A";
-                }
-            }
+            get => StudyPhaseTypeTypeString.Resolve[Phase];                
         }
 
         private bool hasHealthyPatient;
@@ -89,20 +79,9 @@ namespace HtaManager.Infrastructure.Domain
                 {
                     return InterventionStudyModelTypeString.Resolve[InterventionModel];
                 }
-                else if (observationalModelList.Count > 0)
-                {
-                    List<string> result = new List<string>();
-
-                    for (int i = 0; i < ObservationalModelList.Count; i++)
-                    {
-                        result.Add(StudyObservationalModelTypeString.Resolve[ObservationalModelList[i]] + " (" + StudyTimePerspectiveTypeString.Resolve[TimePerspectiveList[i]] + ")");
-                    }
-
-                    return string.Join(", ", result);
-                }
                 else
                 {
-                    return "N/A";
+                    return StudyObservationalModelTypeString.Resolve[ObservationalModel] + " (" + StudyTimePerspectiveTypeString.Resolve[TimePerspective] + ")";
                 }
             }
         }
@@ -184,18 +163,18 @@ namespace HtaManager.Infrastructure.Domain
             set => SetProperty(ref enrollment, value);
         }
 
-        private ObservableCollection<StudyObservationalModelType> observationalModelList;
-        public ObservableCollection<StudyObservationalModelType> ObservationalModelList
+        private StudyObservationalModelType observationalModel;
+        public StudyObservationalModelType ObservationalModel
         {
-            get => observationalModelList;
-            set => SetProperty(ref observationalModelList, value);
+            get => observationalModel;
+            set => SetProperty(ref observationalModel, value);
         }
 
-        private ObservableCollection<StudyTimePerspectiveType> timePerspectiveList;
-        public ObservableCollection<StudyTimePerspectiveType> TimePerspectiveList
+        private StudyTimePerspectiveType timePerspective;
+        public StudyTimePerspectiveType TimePerspective
         {
-            get => timePerspectiveList;
-            set => SetProperty(ref timePerspectiveList, value);
+            get => timePerspective;
+            set => SetProperty(ref timePerspective, value);
         }
 
         private string followUpDuration;
@@ -215,8 +194,8 @@ namespace HtaManager.Infrastructure.Domain
             Allocation = StudyAllocationType.NONE;
             InterventionModel = StudyInterventionModelType.NONE;
             MaskedPersonList = new ObservableCollection<StudyMaskedPersonType>();
-            ObservationalModelList = new ObservableCollection<StudyObservationalModelType>();
-            PhaseList = new ObservableCollection<StudyPhaseType>();
+            ObservationalModel = StudyObservationalModelType.UNKNOWN;
+            Phase = StudyPhaseType.UNKNOWN;
             Purpose = StudyPurposeType.OTHER;
         }
 
@@ -237,10 +216,10 @@ namespace HtaManager.Infrastructure.Domain
             this.MaxAge = design.MaxAge;
             this.MinAge = design.MinAge;
             this.ModelDescription = design.ModelDescription;
-            this.ObservationalModelList = new ObservableCollection<StudyObservationalModelType>(design.ObservationalModelList);
-            this.PhaseList = new ObservableCollection<StudyPhaseType>(design.PhaseList);
+            this.ObservationalModel = design.ObservationalModel;
+            this.Phase = design.Phase;
             this.Purpose = design.Purpose;
-            this.TimePerspectiveList = new ObservableCollection<StudyTimePerspectiveType>(design.TimePerspectiveList);
+            this.TimePerspective = design.TimePerspective;
             this.Type = design.Type;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using HtaManager.Infrastructure.Domain;
 using HtaManager.Infrastructure.Mvvm;
 using HtaManager.Repository;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,28 @@ namespace HtaManager.GUI.StudyEditor
     public class StudyEditorViewModel: ViewModelBase
     {
         IUnityContainer container;
+        IRegionManager regionManager;
 
         public Prism.Commands.DelegateCommand LoadNctCommand
         {
             get => new Prism.Commands.DelegateCommand(OnLoadNct);
         }
 
+        public Prism.Commands.DelegateCommand SetInterventionalStudyCommand
+        {
+            get => new Prism.Commands.DelegateCommand(OnSetInterventionalStudy);
+        }
+
+        public Prism.Commands.DelegateCommand SetObservationalStudyCommand
+        {
+            get => new Prism.Commands.DelegateCommand(OnSetObservationalStudy);
+        }
+
+        public Prism.Commands.DelegateCommand BackToModelSelectionCommand
+        {
+            get => new Prism.Commands.DelegateCommand(OnBackToModelSelection);
+        }
+        
         private StudyViewModel selectedStudy;
         public StudyViewModel SelectedStudy
         {
@@ -57,6 +74,28 @@ namespace HtaManager.GUI.StudyEditor
             {
                 SetProperty(ref purpose, value);
                 SelectedStudy.Design.Purpose = ((KeyValuePair<StudyPurposeType, string>)purpose).Key;
+            }
+        }
+
+        private object timePerspective;
+        public object TimePerspective
+        {
+            get => timePerspective;
+            set
+            {
+                SetProperty(ref timePerspective, value);
+                SelectedStudy.Design.TimePerspective = ((KeyValuePair<StudyTimePerspectiveType, string>)timePerspective).Key;
+            }
+        }
+
+        private object observationalModel;
+        public object ObservationalModel
+        {
+            get => observationalModel;
+            set
+            {
+                SetProperty(ref observationalModel, value);
+                SelectedStudy.Design.ObservationalModel = ((KeyValuePair<StudyObservationalModelType, string>)observationalModel).Key;
             }
         }
 
@@ -156,16 +195,37 @@ namespace HtaManager.GUI.StudyEditor
             }
         }
 
-        public StudyEditorViewModel(IUnityContainer container)
+        public StudyEditorViewModel(IUnityContainer container, IRegionManager regionManager)
         {
             this.container = container;
+            this.regionManager = regionManager;
 
             SelectedStudy = new StudyViewModel();
+            regionManager.RegisterViewWithRegion(RegionNames.StudyDesignRegion, typeof(ModelSelectionView));
         }
 
         private void OnLoadNct()
         {
             SelectedStudy = new StudyViewModel(container.Resolve<IRegistryRepository>("ClinicalTrials").RequestStudy(SelectedStudy.NctId));
         }
+
+        private void OnSetInterventionalStudy()
+        {
+            regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "InterventionalStudyEditorView");
+        }
+
+        private void OnSetObservationalStudy()
+        {
+            regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "ObservationalStudyEditorView");
+        }
+
+
+        private void OnBackToModelSelection()
+        {
+            regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "ModelSelectionView");
+        }
+
+        
+
     }
 }

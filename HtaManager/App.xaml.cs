@@ -49,8 +49,11 @@ namespace HtaManager
 
             containerRegistry.Register<object, StudySearchView>("StudySearchView");
             containerRegistry.Register<object, StudyGridView>("StudyGridView");
-            //containerRegistry.Register<object, StudyEditorView>("StudyGridView");
+            containerRegistry.Register<object, ModelSelectionView>("ModelSelectionView");
+            containerRegistry.Register<object, InterventionalStudyEditorView>("InterventionalStudyEditorView");
+            containerRegistry.Register<object, ObservationalStudyEditorView>("ObservationalStudyEditorView");
 
+            //containerRegistry.Register<object, StudyEditorView>("StudyGridView");
 
         }
 

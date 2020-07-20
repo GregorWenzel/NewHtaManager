@@ -95,10 +95,25 @@
       <DependentUpon>SplashScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SplashScreen\SplashScreenViewModel.cs" />
+    <Compile Include="StudyDetail\InterventionalStudyDetailView.xaml.cs">
+      <DependentUpon>InterventionalStudyDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudyDetail\ObservationalStudyDetailView.xaml.cs">
+      <DependentUpon>ObservationalStudyDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StudyDetail\StudyDetailView.xaml.cs">
       <DependentUpon>StudyDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="StudyDetail\StudyDetailViewModel.cs" />
+    <Compile Include="StudyEditor\InterventionalStudyEditorView.xaml.cs">
+      <DependentUpon>InterventionalStudyEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudyEditor\ModelSelectionView.xaml.cs">
+      <DependentUpon>ModelSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudyEditor\ObservationalStudyEditorView.xaml.cs">
+      <DependentUpon>ObservationalStudyEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StudyEditor\StudyEditorView.xaml.cs">
       <DependentUpon>StudyEditorView.xaml</DependentUpon>
     </Compile>
@@ -126,7 +141,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="StudyDetail\InterventionalStudyDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyDetail\ObservationalStudyDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="StudyDetail\StudyDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyEditor\InterventionalStudyEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyEditor\ModelSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyEditor\ObservationalStudyEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

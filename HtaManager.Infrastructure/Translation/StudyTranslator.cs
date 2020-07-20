@@ -30,8 +30,8 @@ namespace HtaManager.Infrastructure.Translation
             result.Design.MaskingDescription = Translator.Translate(study.Design.MaskingDescription);
             result.Design.ModelDescription = Translator.Translate(study.Design.ModelDescription);
             result.Design.InterventionModel = study.Design.InterventionModel;
-            result.Design.ObservationalModelList = study.Design.ObservationalModelList;
-            result.Design.TimePerspectiveList = study.Design.TimePerspectiveList;
+            result.Design.ObservationalModel = study.Design.ObservationalModel;
+            result.Design.TimePerspective = study.Design.TimePerspective;
 
             result.Design.EligibilityText = Translator.Translate(study.Design.EligibilityText);
             result.EndpointList = new List<OutcomeMeasure>();

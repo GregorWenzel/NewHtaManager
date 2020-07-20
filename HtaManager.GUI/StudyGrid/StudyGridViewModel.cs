@@ -16,6 +16,7 @@ namespace HtaManager.GUI.StudyGrid
     public class StudyGridViewModel: RegionViewModelBase
     {
         IUnityContainer container;
+        IRegionManager regionManager;
 
         public Prism.Commands.DelegateCommand NewStudyCommand
         {
@@ -25,15 +26,21 @@ namespace HtaManager.GUI.StudyGrid
         public StudyGridViewModel(IRegionManager regionManager, IUnityContainer container): base(regionManager)
         {
             this.container = container;
+            this.regionManager = regionManager;
         }
 
         private void OnNewStudy()
         {
+            IUnityContainer childContainer = container.CreateChildContainer();
+
             RadWindow newStudyWindow = new RadWindow();
             newStudyWindow.Width = 1000;
             newStudyWindow.Height = 600;
             newStudyWindow.Loaded += (s, e) => { newStudyWindow.ParentOfType<Window>().ShowInTaskbar = true; };
             newStudyWindow.Content = new StudyEditorView();
+
+            Prism.Regions.RegionManager.SetRegionManager(newStudyWindow, regionManager);
+
             newStudyWindow.ShowDialog();
         }
     }
