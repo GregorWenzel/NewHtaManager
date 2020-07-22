@@ -28,8 +28,8 @@
             <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
                 <Grid.Resources>
                     <Style TargetType="TextBox">
-            <Setter Property="Height" Value="25"/>
-        </Style>
+                        <Setter Property="MinHeight" Value="25"/>
+                    </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75"/>
@@ -121,15 +121,20 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <telerik:RadGridView Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding SelectedStudy.StudyArmList}" ShowGroupPanel="False" AutoGenerateColumns="False">
+                            <telerik:RadGridView Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding SelectedStudy.StudyArmList}" ShowGroupPanel="False" AutoGenerateColumns="False" >
+                                <telerik:EventToCommandBehavior.EventBindings>
+                                    <telerik:EventBinding EventName="MouseDoubleClick" Command="{Binding MouseDoubleClickCommand}" PassEventArgsToCommand="True"/>
+                                </telerik:EventToCommandBehavior.EventBindings>
                                 <telerik:RadGridView.Columns>
                                     <telerik:GridViewDataColumn Header="Arm" DataMemberBinding="{Binding Title}"/>
-                                    <telerik:GridViewDataColumn Header="Typ" DataMemberBinding="{Binding InterventionTypeLabel}"/>
-                                    <telerik:GridViewDataColumn Header="Intervention" DataMemberBinding="{Binding Description}"/>
+                                    <telerik:GridViewDataColumn Header="Typ" DataMemberBinding="{Binding StudyArmTypeLabel, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <telerik:GridViewDataColumn Header="Intervention" DataMemberBinding="{Binding InterventionNameLabel}"/>
                                 </telerik:RadGridView.Columns>
                             </telerik:RadGridView>
-                            <Button Grid.Row="1" Grid.Column="2" Content="+" Height="25" Width="25" Command="{Binding AddStudyArm}" HorizontalAlignment="Right"/>
-                            <Button Grid.Row="1" Grid.Column="1" Content="-" Height="25" Width="25" Command="{Binding AddStudyArm}" HorizontalAlignment="Right"/>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="+" Height="20" Width="20" Command="{Binding AddStudyArm}" HorizontalAlignment="Right" Margin="5"/>
+                                <Button Content="-" Height="20" Width="20" Command="{Binding RemoveStudyArm}" HorizontalAlignment="Right" Margin="5"/>
+                            </StackPanel>
                         </Grid>
                     </Grid>
                 </Border>

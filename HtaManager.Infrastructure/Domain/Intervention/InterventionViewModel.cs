@@ -39,6 +39,15 @@ namespace HtaManager.Infrastructure.Domain
             set => SetProperty(ref otherNameList, value);
         }
 
+        public string OtherNameLabel
+        {
+            get => string.Join(",", OtherNameList);
+            set 
+            {
+                OtherNameList = value.Split(new char[] { ';' }).ToList();
+            }
+        }
+
         private List<string> studyArmNameList;
         public List<string> StudyArmNameList
         {
@@ -53,6 +62,13 @@ namespace HtaManager.Infrastructure.Domain
             this.OtherNameList = intervention.OtherNameList;
             this.StudyArmNameList = intervention.StudyArmNameList;
             this.Type = intervention.Type;
+        }
+
+        public InterventionViewModel()
+        {
+            this.StudyArmNameList = new List<string>();
+            this.Type = InterventionType.UNKNOWN;
+            this.OtherNameList = new List<string>();
         }
     }
 }

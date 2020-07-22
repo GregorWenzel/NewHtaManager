@@ -1,4 +1,5 @@
-﻿using HtaManager.Infrastructure.Domain;
+﻿using HtaManager.GUI.StudyArmEditor;
+using HtaManager.Infrastructure.Domain;
 using HtaManager.Infrastructure.Mvvm;
 using HtaManager.Repository;
 using Prism.Regions;
@@ -7,11 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Telerik.Windows.Controls;
 using Unity;
 
 namespace HtaManager.GUI.StudyEditor
 {
-    public class StudyEditorViewModel: ViewModelBase
+    public class StudyEditorViewModel: Infrastructure.Mvvm.ViewModelBase
     {
         IUnityContainer container;
         IRegionManager regionManager;
@@ -35,7 +38,16 @@ namespace HtaManager.GUI.StudyEditor
         {
             get => new Prism.Commands.DelegateCommand(OnBackToModelSelection);
         }
-        
+
+        public Prism.Commands.DelegateCommand<MouseButtonEventArgs> MouseDoubleClickCommand
+        {
+            get => new Prism.Commands.DelegateCommand<MouseButtonEventArgs>(OnMouseDoubleClicked);        
+        }
+        public Prism.Commands.DelegateCommand AddStudyArm
+        {
+            get => new Prism.Commands.DelegateCommand(OnAddStudyArm);
+        }
+
         private StudyViewModel selectedStudy;
         public StudyViewModel SelectedStudy
         {
@@ -96,6 +108,28 @@ namespace HtaManager.GUI.StudyEditor
             {
                 SetProperty(ref observationalModel, value);
                 SelectedStudy.Design.ObservationalModel = ((KeyValuePair<StudyObservationalModelType, string>)observationalModel).Key;
+            }
+        }
+
+        private object interventionalModel;
+        public object InterventionalModel
+        {
+            get => interventionalModel;
+            set
+            {
+                SetProperty(ref interventionalModel, value);
+                SelectedStudy.Design.InterventionModel = ((KeyValuePair<StudyInterventionModelType, string>)interventionalModel).Key;
+            }
+        }
+
+        private object studyPhase;
+        public object StudyPhase
+        {
+            get => studyPhase;
+            set
+            {
+                SetProperty(ref studyPhase, value);
+                SelectedStudy.Design.Phase = ((KeyValuePair<StudyPhaseType, string>)studyPhase).Key;
             }
         }
 
@@ -201,12 +235,30 @@ namespace HtaManager.GUI.StudyEditor
             this.regionManager = regionManager;
 
             SelectedStudy = new StudyViewModel();
-            regionManager.RegisterViewWithRegion(RegionNames.StudyDesignRegion, typeof(ModelSelectionView));
+            if (!regionManager.Regions.ContainsRegionWithName(RegionNames.StudyDesignRegion))
+            {
+                regionManager.RegisterViewWithRegion(RegionNames.StudyDesignRegion, typeof(ModelSelectionView));
+            }
         }
 
         private void OnLoadNct()
         {
             SelectedStudy = new StudyViewModel(container.Resolve<IRegistryRepository>("ClinicalTrials").RequestStudy(SelectedStudy.NctId));
+            Purpose = new KeyValuePair<StudyPurposeType, string>(SelectedStudy.Design.Purpose, StudyPurposeTypeString.Resolve[SelectedStudy.Design.Purpose]);
+
+            if (SelectedStudy.Design.Type == "Observational")
+            {
+                regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "ObservationalStudyEditorView");
+                ObservationalModel = new KeyValuePair<StudyObservationalModelType, string>(SelectedStudy.Design.ObservationalModel, StudyObservationalModelTypeString.Resolve[SelectedStudy.Design.ObservationalModel]);
+                TimePerspective = new KeyValuePair<StudyTimePerspectiveType, string>(SelectedStudy.Design.TimePerspective, StudyTimePerspectiveTypeString.Resolve[SelectedStudy.Design.TimePerspective]);
+            }
+            else
+            {
+                regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "InterventionalStudyEditorView");
+                InterventionalModel = new KeyValuePair<StudyInterventionModelType, string>(SelectedStudy.Design.InterventionModel, StudyInterventionModelTypeString.Resolve[SelectedStudy.Design.InterventionModel]);
+                Allocation = new KeyValuePair<StudyAllocationType, string>(SelectedStudy.Design.Allocation, StudyAllocationTypeString.Resolve[SelectedStudy.Design.Allocation]);
+                StudyPhase = new KeyValuePair<StudyPhaseType, string>(SelectedStudy.Design.Phase, StudyPhaseTypeString.Resolve[SelectedStudy.Design.Phase]);
+            }
         }
 
         private void OnSetInterventionalStudy()
@@ -219,13 +271,44 @@ namespace HtaManager.GUI.StudyEditor
             regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "ObservationalStudyEditorView");
         }
 
-
         private void OnBackToModelSelection()
         {
             regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "ModelSelectionView");
         }
 
-        
+        private void OnMouseDoubleClicked(MouseButtonEventArgs obj)
+        {
+            StudyArmViewModel studyArm = (obj.Source as RadGridView).SelectedItem as StudyArmViewModel;
 
+            OpenStudyArmEditor(studyArm);
+        }
+
+        private bool? OpenStudyArmEditor(StudyArmViewModel studyArm)
+        { 
+            RadWindow studyArmEditorWindow = new RadWindow();
+            studyArmEditorWindow.Header = "Studienarm-Editor";
+
+            StudyArmEditorView studyArmEditorView = new StudyArmEditorView();
+            
+            StudyArmEditorViewModel studyArmEditorViewModel = new StudyArmEditorViewModel();
+            studyArmEditorViewModel.SelectedStudyArm = studyArm;
+
+            studyArmEditorView.DataContext = studyArmEditorViewModel;
+
+            studyArmEditorWindow.Content = studyArmEditorView;
+
+            return studyArmEditorWindow.ShowDialog();
+        }
+
+        private void OnAddStudyArm()
+        {
+            StudyArmViewModel newStudyArm = new StudyArmViewModel();
+
+            if (OpenStudyArmEditor(newStudyArm) == true)
+            {
+                SelectedStudy.StudyArmList.Add(newStudyArm);
+                newStudyArm.Update();
+            }
+        }
     }
 }

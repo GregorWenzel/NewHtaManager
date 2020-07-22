@@ -26,22 +26,24 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Content="Interventionelle Studie" Background="LightGray"/>
         <Label Grid.Row="1" Grid.Column="0" Content="Phase:" FontWeight="Normal"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedStudy.Design.PhaseString}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
-
-        <Label Grid.Row="2" Grid.Column="0" Content="Typ:" FontWeight="Normal"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedStudy.Design.Type}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
-
-        <Label Grid.Row="3" Grid.Column="0" Content="Modell:" FontWeight="Normal"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedStudy.Design.ModelString}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" FontWeight="Normal"/>
-
-        <Label Grid.Row="4" Grid.Column="0" Content="Randomisierung:" FontWeight="Normal"/>
-        <ComboBox Grid.Row="4" Grid.Column="1" 
+        <ComboBox Grid.Row="1" Grid.Column="1" 
+                                  ItemsSource="{Binding Source={x:Static domain:StudyPhaseTypeString.Resolve}}" 
+                                  SelectedItem="{Binding StudyPhase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
+        <Label Grid.Row="2" Grid.Column="0" Content="Modell:" FontWeight="Normal"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" 
+                                  ItemsSource="{Binding Source={x:Static domain:StudyInterventionModelTypeString.Resolve}}" 
+                                  SelectedItem="{Binding InterventionalModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
+        
+        <Label Grid.Row="3" Grid.Column="0" Content="Randomisierung:" FontWeight="Normal"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" 
                                   ItemsSource="{Binding Source={x:Static domain:StudyAllocationTypeString.Resolve}}" 
                                   SelectedItem="{Binding Allocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>
 
-        <Label Grid.Row="5" Grid.Column="0" Content="Maskierung:" FontWeight="Normal"/>
-        <Grid Grid.Row="5" Grid.Column="1">
+        <Label Grid.Row="4" Grid.Column="0" Content="Maskierung:" FontWeight="Normal"/>
+        <Grid Grid.Row="4" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -57,8 +59,8 @@
 
         </Grid>
 
-        <Label Grid.Row="6" Grid.Column="0" Content="Ziel:" FontWeight="Normal"/>
-        <ComboBox Grid.Row="6" Grid.Column="1" 
+        <Label Grid.Row="5" Grid.Column="0" Content="Ziel:" FontWeight="Normal"/>
+        <ComboBox Grid.Row="5" Grid.Column="1" 
                                   ItemsSource="{Binding Source={x:Static domain:StudyPurposeTypeString.Resolve}}" 
                                   SelectedItem="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   DisplayMemberPath="Value" FontWeight="Normal" Margin="2"/>

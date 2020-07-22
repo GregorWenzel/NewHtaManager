@@ -95,6 +95,10 @@
       <DependentUpon>SplashScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SplashScreen\SplashScreenViewModel.cs" />
+    <Compile Include="StudyArmEditor\StudyArmEditorView.xaml.cs">
+      <DependentUpon>StudyArmEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudyArmEditor\StudyArmEditorViewModel.cs" />
     <Compile Include="StudyDetail\InterventionalStudyDetailView.xaml.cs">
       <DependentUpon>InterventionalStudyDetailView.xaml</DependentUpon>
     </Compile>
@@ -138,6 +142,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="SplashScreen\SplashScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudyArmEditor\StudyArmEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

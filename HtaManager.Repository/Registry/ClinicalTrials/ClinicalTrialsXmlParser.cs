@@ -115,7 +115,7 @@ namespace HtaManager.Repository
 
                 StudyObservationalModelType[] modelTypeArr = new StudyObservationalModelType[observationalModelList.Count];
                 StudyTimePerspectiveType[] timeArr = new StudyTimePerspectiveType[observationalModelList.Count];
-                for (int i=0; i<observationalModelList.Count; i++)
+                for (int i = 0; i < observationalModelList.Count; i++)
                 {
                     XmlNode modelNode = observationalModelList[i];
                     XmlNode timeperspectiveNode = observationalTimePerspectiveList[i];
@@ -133,14 +133,39 @@ namespace HtaManager.Repository
             {
                 result.Design.Allocation = StudyAllocationParser.Parse(ParseSingleNode(designModule, "./Struct[@Name='DesignInfo']/Field[@Name='DesignAllocation']"));
                 result.Design.InterventionModel = StudyInterventionModelTypeParser.Parse(ParseSingleNode(designModule, "./Struct[@Name='DesignInfo']/Field[@Name='DesignInterventionModel']"));
-            }
 
-            XmlNodeList phaseList = designModule.SelectNodes("./List[@Name='PhaseList']/Field");
-            StudyPhaseType[] phaseArr = new StudyPhaseType[phaseList.Count];
-            for (int i=0; i<phaseArr.Length; i++)
-            {
-                XmlNode phase = phaseList[i];
-                phaseArr[i] = StudyPhaseParser.Parse(phase.InnerText);
+                XmlNodeList phaseList = designModule.SelectNodes("./List[@Name='PhaseList']/Field");
+                if (phaseList.Count == 0)
+                {
+                    result.Design.Phase = StudyPhaseType.NONE;
+                }
+                else if (phaseList.Count == 1)
+                {
+                    result.Design.Phase = StudyPhaseParser.Parse(phaseList[0].InnerText);
+                }
+                else
+                {
+                    StudyPhaseType[] phaseArr = new StudyPhaseType[phaseList.Count];
+                    for (int i = 0; i < phaseArr.Length; i++)
+                    {
+                        XmlNode phase = phaseList[i];
+                        phaseArr[i] = StudyPhaseParser.Parse(phase.InnerText);
+                    }
+
+
+                    if (phaseArr.Contains(StudyPhaseType.PHASE_II) && phaseArr.Contains(StudyPhaseType.PHASE_III))
+                    {
+                        result.Design.Phase = StudyPhaseType.PHASE_II_III;
+                    }
+                    else if (phaseArr.Contains(StudyPhaseType.PHASE_I) && phaseArr.Contains(StudyPhaseType.PHASE_II))
+                    {
+                        result.Design.Phase = StudyPhaseType.PHASE_I_II;
+                    }
+                    else
+                    {
+                        result.Design.Phase = phaseArr.Max();
+                    }
+                }
             }
 
             result.Design.DurationPlanned = ParseSingleNode(designModule, "./Field[@Name='TargetDuration']");            

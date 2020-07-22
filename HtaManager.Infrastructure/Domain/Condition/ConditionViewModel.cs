@@ -1,5 +1,5 @@
 ﻿using HtaManager.Infrastructure.Mvvm;
-using Icd10Selector.Domain;
+//using Icd10Selector.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +24,14 @@ namespace HtaManager.Infrastructure.Domain
             set => SetProperty(ref name, value);
         }
 
+        /*
         private Icd10ItemBasic icd10Item;
         public Icd10ItemBasic Icd10Item
         {
             get => icd10Item;
             set => SetProperty(ref icd10Item, value);
         }
-
+        */
         public ConditionViewModel(string name)
         {
             this.Name = name;
@@ -38,7 +39,7 @@ namespace HtaManager.Infrastructure.Domain
 
         public ConditionViewModel(Condition condition)
         {
-            this.Icd10Item = condition.Icd10Item;
+           // this.Icd10Item = condition.Icd10Item;
             this.Id = condition.Id;
             this.Name = condition.Name;
         }

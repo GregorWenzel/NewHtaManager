@@ -30,14 +30,22 @@ namespace HtaManager.Infrastructure.Domain
         public StudyArmType Type
         {
             get => type;
-            set => SetProperty(ref type, value);
+            set
+            {
+                SetProperty(ref type, value);
+                RaisePropertyChanged("StudyArmTypeLabel");
+            }
         }
 
         private InterventionType interventionType;
         public InterventionType InterventionType
         {
             get => interventionType;
-            set => SetProperty(ref interventionType, value);
+            set
+            {
+                SetProperty(ref interventionType, value);
+                RaisePropertyChanged("InterventionTypeLabel");
+            }
         }
 
         private ObservableCollection<InterventionViewModel> interventionList;
@@ -71,9 +79,19 @@ namespace HtaManager.Infrastructure.Domain
             get => InterventionTypeString.Resolve[InterventionType];
         }
 
+        public string StudyArmTypeLabel
+        {
+            get => StudyArmTypeString.Resolve[Type];
+        }
+       
         public StudyArmViewModel()
         {
             InterventionList = new ObservableCollection<InterventionViewModel>();
+        }
+
+        public void Update()
+        {
+            RaisePropertyChanged("InterventionNameLabel");
         }
 
         public StudyArmViewModel(StudyArm arm)

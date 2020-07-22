@@ -39,7 +39,7 @@ namespace HtaManager.Infrastructure.Domain
         }
     }
 
-    public static class InterventionStudyModelTypeString
+    public static class StudyInterventionModelTypeString
     {
         public static Dictionary<StudyInterventionModelType, string> Resolve = new Dictionary<StudyInterventionModelType, string>
         {

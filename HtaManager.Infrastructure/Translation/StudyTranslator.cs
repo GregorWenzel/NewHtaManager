@@ -20,7 +20,7 @@ namespace HtaManager.Infrastructure.Translation
             foreach (Condition condition in study.ConditionList)
             {
                 Condition newCondition = new Condition(Translator.Translate(condition.Name));
-                newCondition.Icd10Item = condition.Icd10Item;
+                //newCondition.Icd10Item = condition.Icd10Item;
                 newCondition.Id = condition.Id;
                 result.ConditionList.Add(newCondition);
             }

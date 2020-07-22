@@ -164,7 +164,14 @@ namespace HtaManager.Repository.Endpoint
 
                 if (connection.State == System.Data.ConnectionState.Closed)
                 {
-                    connection.Open();
+                    try
+                    {
+                        connection.Open();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
             }
         }

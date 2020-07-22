@@ -8,6 +8,7 @@ namespace HtaManager.Infrastructure.Domain
 {
     public enum StudyPhaseType
     {
+        UNKNOWN,
         NONE,
         EARLY_PHASE_I,
         PHASE_I,
@@ -15,8 +16,7 @@ namespace HtaManager.Infrastructure.Domain
         PHASE_II,
         PHASE_II_III,
         PHASE_III,
-        PHASE_IV,
-        UNKNOWN
+        PHASE_IV
     }
 
     public static class StudyPhaseParser
@@ -46,7 +46,7 @@ namespace HtaManager.Infrastructure.Domain
         }
     }
 
-    public static class StudyPhaseTypeTypeString
+    public static class StudyPhaseTypeString
     {
         public static Dictionary<StudyPhaseType, string> Resolve = new Dictionary<StudyPhaseType, string>
         {

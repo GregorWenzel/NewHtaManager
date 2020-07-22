@@ -33,7 +33,7 @@ namespace HtaManager.Infrastructure.Domain
 
         public string PhaseString
         {
-            get => StudyPhaseTypeTypeString.Resolve[Phase];                
+            get => StudyPhaseTypeString.Resolve[Phase];                
         }
 
         private bool hasHealthyPatient;
@@ -77,7 +77,7 @@ namespace HtaManager.Infrastructure.Domain
             {
                 if (InterventionModel != StudyInterventionModelType.NONE)
                 {
-                    return InterventionStudyModelTypeString.Resolve[InterventionModel];
+                    return StudyInterventionModelTypeString.Resolve[InterventionModel];
                 }
                 else
                 {

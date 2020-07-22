@@ -15,6 +15,7 @@ namespace HtaManager.GUI.StudyGrid
 {
     public class StudyGridViewModel: RegionViewModelBase
     {
+        RadWindow newStudyWindow;
         IUnityContainer container;
         IRegionManager regionManager;
 
@@ -33,14 +34,20 @@ namespace HtaManager.GUI.StudyGrid
         {
             IUnityContainer childContainer = container.CreateChildContainer();
 
-            RadWindow newStudyWindow = new RadWindow();
-            newStudyWindow.Width = 1000;
-            newStudyWindow.Height = 600;
-            newStudyWindow.Loaded += (s, e) => { newStudyWindow.ParentOfType<Window>().ShowInTaskbar = true; };
-            newStudyWindow.Content = new StudyEditorView();
+            if (newStudyWindow == null)
+            {
+                newStudyWindow = new RadWindow();
+                newStudyWindow.Width = 1000;
+                newStudyWindow.Height = 600;
+                newStudyWindow.Loaded += (s, e) => { newStudyWindow.ParentOfType<Window>().ShowInTaskbar = true; };
+                newStudyWindow.Content = new StudyEditorView();
 
-            Prism.Regions.RegionManager.SetRegionManager(newStudyWindow, regionManager);
-
+                Prism.Regions.RegionManager.SetRegionManager(newStudyWindow, regionManager);
+            }
+            else
+            {
+                ((newStudyWindow.Content as StudyEditorView).DataContext as StudyEditorViewModel).SelectedStudy = new Infrastructure.Domain.StudyViewModel();
+            }
             newStudyWindow.ShowDialog();
         }
     }
