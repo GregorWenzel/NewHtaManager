@@ -10,7 +10,7 @@
              xmlns:gui="clr-namespace:HtaManager.GUI;assembly=HtaManager.GUI"            
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="900">
+             >
     <UserControl.Resources>
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold"/>
@@ -24,7 +24,11 @@
         </Style>
     </UserControl.Resources>
     <Grid Background="AliceBlue">
-        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
                 <Grid.Resources>
                     <Style TargetType="TextBox">
@@ -169,5 +173,7 @@
                 </Border>
             </Grid>
         </DockPanel>
+        <Button Grid.Row="1" Content="OK" Width="100" Height="25" HorizontalAlignment="Right"
+                Command="{Binding CloseWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=telerik:RadWindow}}"/>
     </Grid>
 </UserControl>

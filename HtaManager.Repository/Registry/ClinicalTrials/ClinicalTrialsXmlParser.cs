@@ -114,17 +114,20 @@ namespace HtaManager.Repository
                 XmlNodeList observationalTimePerspectiveList = designModule.SelectNodes("./Struct[@Name='DesignInfo']/List[@Name='DesignTimePerspectiveList']/Field");
 
                 StudyObservationalModelType[] modelTypeArr = new StudyObservationalModelType[observationalModelList.Count];
-                StudyTimePerspectiveType[] timeArr = new StudyTimePerspectiveType[observationalModelList.Count];
                 for (int i = 0; i < observationalModelList.Count; i++)
                 {
                     XmlNode modelNode = observationalModelList[i];
+                    modelTypeArr[i] = StudyObservationalModelParser.Parse(modelNode.InnerText);
+                }
+                result.Design.ObservationalModel = modelTypeArr.FirstOrDefault();
+
+                StudyTimePerspectiveType[] timeArr = new StudyTimePerspectiveType[observationalTimePerspectiveList.Count];
+                for (int i = 0; i < observationalTimePerspectiveList.Count; i++)
+                {
                     XmlNode timeperspectiveNode = observationalTimePerspectiveList[i];
 
-                    modelTypeArr[i] = StudyObservationalModelParser.Parse(modelNode.InnerText);
                     timeArr[i] = StudyTimePerspectiveParser.Parse(timeperspectiveNode.InnerText);
                 }
-
-                result.Design.ObservationalModel = modelTypeArr.FirstOrDefault();
                 result.Design.TimePerspective = timeArr.FirstOrDefault();
 
                 result.Design.InterventionModel = StudyInterventionModelType.NONE;

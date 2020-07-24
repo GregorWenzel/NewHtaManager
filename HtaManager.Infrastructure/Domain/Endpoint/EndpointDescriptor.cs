@@ -25,8 +25,7 @@ namespace HtaManager.Infrastructure.Domain
         {
             ChildList = new List<EndpointDescriptor>();
         }
-
-        
+                
         public static EndpointDescriptor FromViewModel(EndpointDescriptorViewModel endpointDescriptor)
         {
             EndpointDescriptor result = new EndpointDescriptor();

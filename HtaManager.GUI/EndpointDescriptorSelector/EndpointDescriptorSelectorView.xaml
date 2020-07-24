@@ -39,7 +39,7 @@
                 <telerik:EventBinding EventName="SelectionChanged" Command="{Binding EndpointDescriptorChangedCommand}" PassEventArgsToCommand="True"/>
             </telerik:EventToCommandBehavior.EventBindings>
         </telerik:RadTreeView>
-        <TextBox Grid.Column="0" Grid.Row="1" Height="25" VerticalAlignment="Center" Text="{Binding SelectedEndpointDescriptor.Name}"/>
+        <TextBox Grid.Column="0" Grid.Row="1" Height="25" VerticalAlignment="Center" Text="{Binding FilterString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Border Grid.Column="1" Grid.Row="0" Background="LightBlue">
             <Grid>
                 <Grid.Resources>

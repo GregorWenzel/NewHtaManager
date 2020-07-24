@@ -86,6 +86,11 @@ namespace HtaManager.Infrastructure.Domain
             }
         }
 
+        public string TypeLabel
+        {
+            get => Type == "Observational" ? "Beobachtungsstudie" : "Interventionelle Studie";
+        }
+
         public string PurposeString
         {
             get => StudyPurposeTypeString.Resolve[Purpose];

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:HtaManager.GUI.StudyGrid"
              xmlns:prism="http://prismlibrary.com/" 
              xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:domain="clr-namespace:HtaManager.Infrastructure.Domain;assembly=HtaManager.Infrastructure"                 
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -15,11 +16,17 @@
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <telerik:RadGridView Grid.Row="1" ItemsSource="{Binding StudyList}">
+        <telerik:RadGridView Grid.Row="1" ItemsSource="{Binding StudyList}" SelectedItem="{Binding SelectedStudy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True">
+            <telerik:EventToCommandBehavior.EventBindings>
+                <telerik:EventBinding EventName="MouseDoubleClick" Command="{Binding StudyDoubleClickCommand}" PassEventArgsToCommand="False"/>
+            </telerik:EventToCommandBehavior.EventBindings>
             <telerik:RadGridView.Columns>
-                <telerik:GridViewDataColumn Header="NCT-Nummer"/>
-                <telerik:GridViewDataColumn Header="Titel"/>
-                <telerik:GridViewDataColumn Header="Design"/>
+                <telerik:GridViewDataColumn Header="NCT-Nummer" DataMemberBinding="{Binding NctId}"/>
+                <telerik:GridViewDataColumn Header="Typ" DataMemberBinding="{Binding Design.TypeLabel}"/>
+                <telerik:GridViewDataColumn Header="Design" DataMemberBinding="{Binding DesignLabel}"/>
+                <telerik:GridViewDataColumn Header="N (geplant)" DataMemberBinding="{Binding Design.Enrollment}"/>
+                <telerik:GridViewDataColumn Header="Titel" DataMemberBinding="{Binding ShortTitle}" Width="600" TextWrapping="NoWrap"/>
             </telerik:RadGridView.Columns>
         </telerik:RadGridView>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">

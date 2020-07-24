@@ -3,6 +3,7 @@ using HtaManager.GUI.StudyArmEditor;
 using HtaManager.Infrastructure.Domain;
 using HtaManager.Infrastructure.Mvvm;
 using HtaManager.Repository;
+using Prism.Commands;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using Telerik.Windows.Controls;
 using Unity;
+using DelegateCommand = Prism.Commands.DelegateCommand;
 
 namespace HtaManager.GUI.StudyEditor
 {
@@ -21,39 +23,44 @@ namespace HtaManager.GUI.StudyEditor
         IUnityContainer container;
         IRegionManager regionManager;
 
-        public Prism.Commands.DelegateCommand LoadNctCommand
+        public DelegateCommand LoadNctCommand
         {
-            get => new Prism.Commands.DelegateCommand(OnLoadNct);
+            get => new DelegateCommand(OnLoadNct);
         }
 
-        public Prism.Commands.DelegateCommand SetInterventionalStudyCommand
+        public DelegateCommand SetInterventionalStudyCommand
         {
-            get => new Prism.Commands.DelegateCommand(OnSetInterventionalStudy);
+            get => new DelegateCommand(OnSetInterventionalStudy);
         }
 
-        public Prism.Commands.DelegateCommand SetObservationalStudyCommand
+        public DelegateCommand SetObservationalStudyCommand
         {
-            get => new Prism.Commands.DelegateCommand(OnSetObservationalStudy);
+            get => new DelegateCommand(OnSetObservationalStudy);
         }
 
-        public Prism.Commands.DelegateCommand BackToModelSelectionCommand
+        public DelegateCommand BackToModelSelectionCommand
         {
-            get => new Prism.Commands.DelegateCommand(OnBackToModelSelection);
+            get => new DelegateCommand(OnBackToModelSelection);
         }
 
-        public Prism.Commands.DelegateCommand<MouseButtonEventArgs> ShowStudyArmCommand
+        public DelegateCommand<MouseButtonEventArgs> ShowStudyArmCommand
         {
-            get => new Prism.Commands.DelegateCommand<MouseButtonEventArgs>(OnShowStudyArm);        
+            get => new DelegateCommand<MouseButtonEventArgs>(OnShowStudyArm);        
         }
 
-        public Prism.Commands.DelegateCommand<MouseButtonEventArgs> ShowEndpointCommand
+        public DelegateCommand<MouseButtonEventArgs> ShowEndpointCommand
         {
-            get => new Prism.Commands.DelegateCommand<MouseButtonEventArgs>(OnShowEndpoint);
+            get => new DelegateCommand<MouseButtonEventArgs>(OnShowEndpoint);
         }
 
-        public Prism.Commands.DelegateCommand AddStudyArm
+        public DelegateCommand AddStudyArm
         {
-            get => new Prism.Commands.DelegateCommand(OnAddStudyArm);
+            get => new DelegateCommand(OnAddStudyArm);
+        }
+
+        public DelegateCommand<RadWindow> CloseWindowCommand
+        {
+            get => new DelegateCommand<RadWindow>(OnCloseWindow);
         }
 
         private StudyViewModel selectedStudy;
@@ -63,15 +70,7 @@ namespace HtaManager.GUI.StudyEditor
             set
             {
                 SetProperty(ref selectedStudy, value);
-                allocation = new KeyValuePair<StudyAllocationType, string>(SelectedStudy.Design.Allocation, StudyAllocationTypeString.Resolve[SelectedStudy.Design.Allocation]);
-                purpose = new KeyValuePair<StudyPurposeType, string>(SelectedStudy.Design.Purpose, StudyPurposeTypeString.Resolve[SelectedStudy.Design.Purpose]);
-
-                RaisePropertyChanged("Allocation");
-                RaisePropertyChanged("Purpose");
-                RaisePropertyChanged("AreOutcomeAssessorsBlinded");
-                RaisePropertyChanged("AreCareProvidersBlinded");
-                RaisePropertyChanged("AreInvestigatorsBlinded");
-                RaisePropertyChanged("ArePatientsBlinded");
+                UpdateView();
             }
         }
 
@@ -252,6 +251,11 @@ namespace HtaManager.GUI.StudyEditor
         private void OnLoadNct()
         {
             SelectedStudy = new StudyViewModel(container.Resolve<IRegistryRepository>("ClinicalTrials").RequestStudy(SelectedStudy.NctId));
+            UpdateView();
+        }
+
+        private void UpdateView()
+        { 
             Purpose = new KeyValuePair<StudyPurposeType, string>(SelectedStudy.Design.Purpose, StudyPurposeTypeString.Resolve[SelectedStudy.Design.Purpose]);
 
             if (SelectedStudy.Design.Type == "Observational")
@@ -260,12 +264,16 @@ namespace HtaManager.GUI.StudyEditor
                 ObservationalModel = new KeyValuePair<StudyObservationalModelType, string>(SelectedStudy.Design.ObservationalModel, StudyObservationalModelTypeString.Resolve[SelectedStudy.Design.ObservationalModel]);
                 TimePerspective = new KeyValuePair<StudyTimePerspectiveType, string>(SelectedStudy.Design.TimePerspective, StudyTimePerspectiveTypeString.Resolve[SelectedStudy.Design.TimePerspective]);
             }
-            else
+            else if (SelectedStudy.Design.Type == "Interventional")
             {
                 regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "InterventionalStudyEditorView");
                 InterventionalModel = new KeyValuePair<StudyInterventionModelType, string>(SelectedStudy.Design.InterventionModel, StudyInterventionModelTypeString.Resolve[SelectedStudy.Design.InterventionModel]);
                 Allocation = new KeyValuePair<StudyAllocationType, string>(SelectedStudy.Design.Allocation, StudyAllocationTypeString.Resolve[SelectedStudy.Design.Allocation]);
                 StudyPhase = new KeyValuePair<StudyPhaseType, string>(SelectedStudy.Design.Phase, StudyPhaseTypeString.Resolve[SelectedStudy.Design.Phase]);
+            }
+            else
+            {
+                OnBackToModelSelection();
             }
         }
 
@@ -336,6 +344,12 @@ namespace HtaManager.GUI.StudyEditor
                 SelectedStudy.StudyArmList.Add(newStudyArm);
                 newStudyArm.Update();
             }
+        }
+
+        private void OnCloseWindow(RadWindow parentWindow)
+        {
+            parentWindow.DialogResult = true;
+            parentWindow.Close();
         }
     }
 }

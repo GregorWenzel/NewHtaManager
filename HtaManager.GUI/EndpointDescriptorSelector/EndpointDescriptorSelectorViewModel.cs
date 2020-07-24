@@ -96,7 +96,7 @@ namespace HtaManager.GUI.EndpointDescriptorSelector
             set
             {
                 SetProperty(ref filterString, value);
-                ConstructFlatList();
+                FilterTree();
             }
         }
 
@@ -119,11 +119,41 @@ namespace HtaManager.GUI.EndpointDescriptorSelector
             }
         }
 
+        private void FilterTree()
+        {
+            EndpointDescriptorList.Clear();
+
+            foreach (EndpointDescriptor ep in originalEndpointDescriptorList)
+            {
+                EndpointDescriptorViewModel epv = new EndpointDescriptorViewModel(ep);
+
+                foreach (EndpointDescriptor child in ep.ChildList)
+                {
+                    if (!IsInFilter(child))
+                    {
+                        epv.ChildList.Remove(epv.ChildList.First(item => item.Id == child.Id));
+                    }
+                }
+
+                if (IsInFilter(epv) || epv.ChildList.Count > 0)
+                {
+                    EndpointDescriptorList.Add(epv);
+                }
+            }
+        }
+
         private bool IsInFilter(EndpointDescriptorViewModel item)
         {
             if (string.IsNullOrEmpty(FilterString)) return true;
 
             return CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Name, FilterString, CompareOptions.IgnoreCase) >= 0 || (item.Abbreviation != null && CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Abbreviation, FilterString, CompareOptions.IgnoreCase) >= 0) || CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.DisplayName, FilterString, CompareOptions.IgnoreCase) >= 0;
+        }
+
+        private bool IsInFilter(EndpointDescriptor item)
+        {
+            if (string.IsNullOrEmpty(FilterString)) return true;
+
+            return CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Name, FilterString, CompareOptions.IgnoreCase) >= 0 || (item.Abbreviation != null && CultureInfo.CurrentCulture.CompareInfo.IndexOf(item.Abbreviation, FilterString, CompareOptions.IgnoreCase) >= 0);
         }
 
         public EndpointDescriptorSelectorViewModel(IUnityContainer container, List<EndpointDescriptor> endpointDescriptorList)

@@ -43,11 +43,12 @@ namespace HtaManager.Infrastructure.Domain
     {
         public static Dictionary<StudyInterventionModelType, string> Resolve = new Dictionary<StudyInterventionModelType, string>
         {
+            { StudyInterventionModelType.NONE, "keine" },
             { StudyInterventionModelType.UNKNOWN, "unbekannt" },
             { StudyInterventionModelType.SINGLE_GROUP, "Einzelgruppe" },
             { StudyInterventionModelType.PARALLEL, "Parallelgruppen" },
             { StudyInterventionModelType.CROSSOVER, "Crossover" },
-            { StudyInterventionModelType.FACTORIAL, "faktoriell" },
+            { StudyInterventionModelType.FACTORIAL, "faktorielle" },
             { StudyInterventionModelType.SEQUENTIAL, "sequenzielle" }
         };
     }

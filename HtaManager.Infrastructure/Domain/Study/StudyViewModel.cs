@@ -145,6 +145,36 @@ namespace HtaManager.Infrastructure.Domain
             }
         }
 
+        public string DesignLabel
+        {
+            get
+            {
+                List<string> resultList = new List<string>();
+                if (Design.Type == "Interventional")
+                {
+                    if (Design.MaskedPersonList.Count == 0)
+                        resultList.Add("Open-Label");
+                    else
+                        resultList.Add(Design.MaskedPersonList.Count + "-fach verblindet");
+
+                    if (Design.Allocation == StudyAllocationType.NONRANDOMIZED || Design.Allocation == StudyAllocationType.RANDOMIZED) 
+                        resultList.Add(StudyAllocationTypeString.Resolve[Design.Allocation]);
+                    if (Design.InterventionModel != StudyInterventionModelType.UNKNOWN && Design.InterventionModel != StudyInterventionModelType.NONE)
+                        resultList.Add(StudyInterventionModelTypeString.Resolve[Design.InterventionModel]);
+                }
+                else
+                {
+                    if (Design.TimePerspective != StudyTimePerspectiveType.UNKNOWN && Design.TimePerspective != StudyTimePerspectiveType.OTHER)
+                    {
+                        resultList.Add(StudyTimePerspectiveTypeString.Resolve[Design.TimePerspective]);
+                    }
+                    resultList.Add(StudyObservationalModelTypeString.Resolve[Design.ObservationalModel]);
+                }
+
+                return String.Join(", ", resultList);
+            }
+        }
+
         public string InterventionText
         {
             get
