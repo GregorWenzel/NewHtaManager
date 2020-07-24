@@ -95,8 +95,8 @@ namespace HtaManager.Infrastructure.Domain
             set => SetProperty(ref durationPlanned, value);
         }
 
-        private ObservableCollection<OutcomeMeasure> endpointList;
-        public ObservableCollection<OutcomeMeasure> EndpointList
+        private ObservableCollection<OutcomeMeasureViewModel> endpointList;
+        public ObservableCollection<OutcomeMeasureViewModel> EndpointList
         {
             get => endpointList;
             set => SetProperty(ref endpointList, value);
@@ -163,7 +163,7 @@ namespace HtaManager.Infrastructure.Domain
         {
             get
             {
-                List<OutcomeMeasure> resultList = EndpointList.OrderBy(item => item.EndpointPriority).GroupBy(item => item.EndpointDescriptor.Id).Select(item2 => item2.OrderBy(item3 => item3.EndpointDescriptor.Id).First()).ToList();
+                List<OutcomeMeasureViewModel> resultList = EndpointList.OrderBy(item => item.EndpointPriority).GroupBy(item => item.EndpointDescriptor.Id).Select(item2 => item2.OrderBy(item3 => item3.EndpointDescriptor.Id).First()).ToList();
 
                 return string.Join("\r\n", resultList.Select(item => $"{item.EndpointDescriptor.DisplayName} - {OutcomePriorityTypeString.Resolve[item.EndpointPriority]}"));
             }
@@ -189,7 +189,7 @@ namespace HtaManager.Infrastructure.Domain
         {
             ConditionList = new ObservableCollection<ConditionViewModel>();
             Design = new StudyDesignViewModel();
-            EndpointList = new ObservableCollection<OutcomeMeasure>();
+            EndpointList = new ObservableCollection<OutcomeMeasureViewModel>();
             KeywordList = new ObservableCollection<string>();
             PublicationList = new ObservableCollection<PublicationViewModel>();
             SecondaryIndentifierList = new ObservableCollection<string>();
@@ -203,7 +203,7 @@ namespace HtaManager.Infrastructure.Domain
             this.ConditionList = new ObservableCollection<ConditionViewModel>(study.ConditionList.Select(item => new ConditionViewModel(item)));
             this.Design = new StudyDesignViewModel(study.Design);
             this.Design.EligibilityText = study.Design.EligibilityText;
-            this.EndpointList = new ObservableCollection<OutcomeMeasure>(study.EndpointList);
+            this.EndpointList = new ObservableCollection<OutcomeMeasureViewModel>(study.EndpointList.Select(item => new OutcomeMeasureViewModel(item)));
             this.FirstResultsSubmittedDate = study.FirstResultsSubmittedDate;
             this.FirstSubmittedDate = study.FirstSubmittedDate;
             this.FullTitle = study.FullTitle;

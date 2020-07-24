@@ -228,18 +228,22 @@ namespace HtaManager.Repository
                 newEndpoint.Name = ParseSingleNode(outcome, "./Field[@Name='PrimaryOutcomeMeasure']");
                 newEndpoint.Study = result;
                 newEndpoint.EndpointDescriptor = GetEndpointDescriptor(newEndpoint);
+
+                result.EndpointList.Add(newEndpoint);
             }
 
             outcomeList = outcomesModule.SelectNodes("./List[@Name='SecondaryOutcomeList']/Struct");
             foreach (XmlNode outcome in outcomeList)
             {
                 OutcomeMeasure newEndpoint = new OutcomeMeasure();
-                newEndpoint.EndpointPriority = OutcomePriorityType.PRIMARY;
+                newEndpoint.EndpointPriority = OutcomePriorityType.SECONDARY;
                 newEndpoint.Description = ParseSingleNode(outcome, "./Field[@Name='SecondaryOutcomeDescription']");
                 newEndpoint.TimeFrame = ParseSingleNode(outcome, "./Field[@Name='SecondaryOutcomeTimeFrame']");
                 newEndpoint.Name = ParseSingleNode(outcome, "./Field[@Name='SecondaryOutcomeMeasure']");
                 newEndpoint.Study = result;
                 newEndpoint.EndpointDescriptor = GetEndpointDescriptor(newEndpoint);
+
+                result.EndpointList.Add(newEndpoint);
             }
         }
 

@@ -123,7 +123,7 @@
                             </Grid.ColumnDefinitions>
                             <telerik:RadGridView Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding SelectedStudy.StudyArmList}" ShowGroupPanel="False" AutoGenerateColumns="False" >
                                 <telerik:EventToCommandBehavior.EventBindings>
-                                    <telerik:EventBinding EventName="MouseDoubleClick" Command="{Binding MouseDoubleClickCommand}" PassEventArgsToCommand="True"/>
+                                    <telerik:EventBinding EventName="MouseDoubleClick" Command="{Binding ShowStudyArmCommand}" PassEventArgsToCommand="True"/>
                                 </telerik:EventToCommandBehavior.EventBindings>
                                 <telerik:RadGridView.Columns>
                                     <telerik:GridViewDataColumn Header="Arm" DataMemberBinding="{Binding Title}"/>
@@ -145,7 +145,26 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Content="Endpunkte" Background="LightGray"/>
-                        <TextBlock Grid.Row="1" TextWrapping="Wrap" Text="{Binding SelectedStudy.EndpointText}"/>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <telerik:RadListBox Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding SelectedStudy.EndpointList}" DisplayMemberPath="Name" >
+                                <telerik:EventToCommandBehavior.EventBindings>
+                                    <telerik:EventBinding EventName="MouseDoubleClick" Command="{Binding ShowEndpointCommand}" PassEventArgsToCommand="True"/>
+                                </telerik:EventToCommandBehavior.EventBindings>
+                            </telerik:RadListBox>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="+" Height="20" Width="20" Command="{Binding AddStudyArm}" HorizontalAlignment="Right" Margin="5"/>
+                                <Button Content="-" Height="20" Width="20" Command="{Binding RemoveStudyArm}" HorizontalAlignment="Right" Margin="5"/>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Border>
             </Grid>

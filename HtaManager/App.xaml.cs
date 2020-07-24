@@ -1,4 +1,5 @@
 ﻿using HtaManager.GUI;
+using HtaManager.GUI.EndpointDescriptorSelector;
 using HtaManager.GUI.SplashScreen;
 using HtaManager.GUI.StudyDetail;
 using HtaManager.GUI.StudyEditor;
@@ -40,6 +41,8 @@ namespace HtaManager
             ViewModelLocationProvider.Register(typeof(StudySearchView).ToString(), typeof(StudySearchViewModel));
             ViewModelLocationProvider.Register(typeof(StudyDetailView).ToString(), typeof(StudyDetailViewModel));
             ViewModelLocationProvider.Register(typeof(StudyEditorView).ToString(), typeof(StudyEditorViewModel));
+            ViewModelLocationProvider.Register(typeof(EndpointDescriptorSelectorView).ToString(), typeof(EndpointDescriptorSelectorViewModel));
+
 
             containerRegistry.Register<IRegistryRepository, ClinicalTrialsRegistryRepository>("ClinicalTrials");
             containerRegistry.Register<IPublicationRepository, PubmedPublicationRepository>("Pubmed");

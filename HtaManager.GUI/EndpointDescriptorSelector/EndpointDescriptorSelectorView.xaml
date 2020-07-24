@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="HtaManager.GUI.EndpointDescriptorSelector.EndpointDescriptorSelectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HtaManager.GUI.EndpointDescriptorSelector"
+             xmlns:domain="clr-namespace:HtaManager.Infrastructure.Domain;assembly=HtaManager.Infrastructure"            
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:prism="http://prismlibrary.com/"                   
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <UserControl.Resources>
+        <Style x:Key="ItemContainerStyle" TargetType="{x:Type telerik:RadTreeViewItem}">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+        </Style>
+        <DataTemplate x:Key="Endpoint">
+            <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        </DataTemplate>
+        <HierarchicalDataTemplate x:Key="EndpointTree" ItemTemplate="{StaticResource Endpoint}" ItemsSource="{Binding ChildList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        </HierarchicalDataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <telerik:RadTreeView IsDragDropEnabled="False" ItemsSource="{Binding EndpointDescriptorList, UpdateSourceTrigger=PropertyChanged}" 
+                             ItemTemplate="{StaticResource EndpointTree}" ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                             SelectedItem="{Binding SelectedEndpointDescriptor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         SelectionMode="Single">
+            <telerik:EventToCommandBehavior.EventBindings>
+                <telerik:EventBinding EventName="SelectionChanged" Command="{Binding EndpointDescriptorChangedCommand}" PassEventArgsToCommand="True"/>
+            </telerik:EventToCommandBehavior.EventBindings>
+        </telerik:RadTreeView>
+        <TextBox Grid.Column="0" Grid.Row="1" Height="25" VerticalAlignment="Center" Text="{Binding SelectedEndpointDescriptor.Name}"/>
+        <Border Grid.Column="1" Grid.Row="0" Background="LightBlue">
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="10,0,0,0"/>
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="Margin" Value="10,0,0,0"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="175"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Name:"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedEndpointDescriptor.Name, Mode=TwoWay}"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="Abkürzung:"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedEndpointDescriptor.Abbreviation, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="Übergeordneter Endpunkt:"/>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <telerik:RadComboBox Height="30" Margin="10,0,0,0" Width="185"
+                                    SelectedItem="{Binding SelectedEndpointDescriptor.Parent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    ItemsSource="{Binding FlatEndpointDescriptorList}" 
+                                    DisplayMemberPath="DisplayName" TextSearchMode="Contains" >
+                        <telerik:EventToCommandBehavior.EventBindings>
+                            <telerik:EventBinding EventName="SelectionChanged" Command="{Binding ChildSelectionChangedCommand}" PassEventArgsToCommand="True"/>
+                        </telerik:EventToCommandBehavior.EventBindings>
+                    </telerik:RadComboBox>
+                    <Button Content="X" Width="24" Height="24" Margin="5,0,0,0" Command="{Binding ClearParentCommand}"/>
+                </StackPanel>
+                <Label Grid.Row="3" Grid.Column="0" Content="Dimension:"/>
+                <telerik:RadComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Source={x:Static domain:EndpointDimensionTypeString.Resolve}, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Value" SelectedValuePath="Key" 
+                             Height="30" SelectedItem="{Binding SelectedEndpointDescriptorDimension}"/>
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Content="{Binding MessageLabel}" VerticalAlignment="Bottom" Height="30" Margin="0" Foreground="Red"/>
+            </Grid>
+        </Border>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Neu" Width="75" Height="30" HorizontalAlignment="Right" Command="{Binding NewEndpointCommand}" Margin="5,0,5,0" />
+            <Button Content="Löschen" Width="75" Height="30" HorizontalAlignment="Right" Command="{Binding DeleteEndpointCommand}" CommandParameter="{Binding SelectedEndpointDescriptor, Mode=TwoWay}" Margin="5,0,5,0"/>
+            <Button Content="Speichern" Width="75" Height="30" HorizontalAlignment="Right" Command="{Binding SaveEndpointCommand}" CommandParameter="{Binding SelectedEndpointDescriptor, Mode=TwoWay}" Margin="5,0,5,0"/>
+            <Button  Content="OK" HorizontalAlignment="Right" Width="75" Height="30" Margin="5,0,0,0" Command="{Binding CloseWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=telerik:RadWindow}}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

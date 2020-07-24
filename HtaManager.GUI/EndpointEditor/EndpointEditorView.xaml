@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="HtaManager.GUI.EndpointEditor.EndpointEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:domain="clr-namespace:HtaManager.Infrastructure.Domain;assembly=HtaManager.Infrastructure"            
+             xmlns:local="clr-namespace:HtaManager.GUI.EndpointEditor" xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             mc:Ignorable="d"
+             MinWidth="600"
+             >
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="Label">
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="0" Content="Titel"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SelectedEndpoint.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Beschreibung"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SelectedEndpoint.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2"/>
+        <Label Grid.Column="0" Grid.Row="2" Content="Priorität"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" 
+                                  ItemsSource="{Binding Source={x:Static domain:OutcomePriorityTypeString.Resolve}}" 
+                                  SelectedItem="{Binding EndpointPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="Value" FontWeight="Normal" Margin="2" Grid.ColumnSpan="2"/>
+        <Label Grid.Column="0" Grid.Row="3" Content="Zeitraum"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding SelectedEndpoint.TimeFrame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2"/>
+        <Label Grid.Column="0" Grid.Row="4" Content="Typ"/>
+        <Label Grid.Column="1" Grid.Row="4" Content="{Binding SelectedEndpoint.EndpointDescriptor.DisplayName}"/>
+        <Button Grid.Column="2" Grid.Row="4" Content="Ändern" Command="{Binding ChangeEndpointDescriptorCommand}" Height="25" Margin="5,0,5,0"/>
+        <Button Grid.Column="2" Grid.Row="5" HorizontalAlignment="Stretch"  Content="OK" Height="25" Margin="5" Command="{Binding CloseWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=telerik:RadWindow}}"/>
+    </Grid>
+</UserControl>

@@ -1,6 +1,7 @@
 ﻿using HtaManager.Infrastructure.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,18 +10,19 @@ namespace HtaManager.Infrastructure.Domain
 {
     public class EndpointDescriptorViewModel : ViewModelBase
     {
-        private int id;
-        public int Id
-        {
-            get => id;
-            set => SetProperty(ref id, value);
-        }
+        public bool IsChanged { get; set; }
+
+        public int Id { get; set; }
 
         private string name;
         public string Name
         {
             get => name;
-            set => SetProperty(ref name, value);
+            set
+            {
+                SetProperty(ref name, value);
+                IsChanged = true;
+            }
         }
 
         public int ParentId { get; set; }
@@ -29,11 +31,15 @@ namespace HtaManager.Infrastructure.Domain
         public string Abbreviation
         {
             get => abbreviation;
-            set => SetProperty(ref abbreviation, value);
+            set
+            {
+                SetProperty(ref abbreviation, value);
+                IsChanged = true;
+            }
         }
 
-        private List<EndpointDescriptorViewModel> childList;
-        public List<EndpointDescriptorViewModel> ChildList
+        private ObservableCollection<EndpointDescriptorViewModel> childList;
+        public ObservableCollection<EndpointDescriptorViewModel> ChildList
         {
             get => childList;
             set => SetProperty(ref childList, value);
@@ -43,24 +49,65 @@ namespace HtaManager.Infrastructure.Domain
         public EndpointDimensionType Dimension
         {
             get => dimension;
-            set => SetProperty(ref dimension, value);
+            set
+            {
+                SetProperty(ref dimension, value);
+                IsChanged = true;
+            }
         }
 
         private string nameEN;
         public string NameEN
         {
             get => nameEN;
-            set => SetProperty(ref nameEN, value);
+            set
+            {
+                SetProperty(ref nameEN, value);
+                IsChanged = true;
+            }
         }
 
         private string abbreviationEN;
         public string AbbreviationEN
         {
             get => abbreviationEN;
-            set => SetProperty(ref abbreviationEN, value);
+            set
+            {
+                SetProperty(ref abbreviationEN, value);
+                IsChanged = true;
+            }
         }
 
-        public EndpointDescriptorViewModel Parent { get; set; }
+        public EndpointDescriptorViewModel OldParent;
+
+        private EndpointDescriptorViewModel parent;
+        public EndpointDescriptorViewModel Parent
+        {
+            get => parent;
+            set
+            {
+                if (OldParent != null)
+                {
+                    OldParent.ChildList.Remove(this);
+                }
+                OldParent = Parent;
+                parent = value;
+
+                if (Parent != null && Parent.ChildList.Contains(this) == false)
+                {
+                    Parent.ChildList.Add(this);
+                }
+
+                IsChanged = true;
+            }
+        }
+
+        private bool isExpanded;
+        public bool IsExpanded
+        {
+            get => isExpanded;
+            set => SetProperty(ref isExpanded, value);
+        }
 
         public string DisplayName
         {
@@ -96,7 +143,29 @@ namespace HtaManager.Infrastructure.Domain
 
         public EndpointDescriptorViewModel()
         {
-            ChildList = new List<EndpointDescriptorViewModel>();
+            ChildList = new ObservableCollection<EndpointDescriptorViewModel>();
+        }
+
+        public EndpointDescriptorViewModel(EndpointDescriptor endpointDescriptor)
+        {
+            if (endpointDescriptor != null)
+            {
+                this.Id = endpointDescriptor.Id;
+                this.Abbreviation = endpointDescriptor.Abbreviation;
+                this.AbbreviationEN = endpointDescriptor.AbbreviationEN;
+                this.ChildList = new ObservableCollection<EndpointDescriptorViewModel>(endpointDescriptor.ChildList.Select(item => new EndpointDescriptorViewModel(item)));
+                this.Dimension = endpointDescriptor.Dimension;
+                this.Id = endpointDescriptor.Id;
+                this.Name = endpointDescriptor.Name;
+                this.NameEN = endpointDescriptor.NameEN;
+                this.ParentId = endpointDescriptor.ParentId;               
+            }
+            else
+            {
+                ChildList = new ObservableCollection<EndpointDescriptorViewModel>();
+            }
+
+            this.ChildList.CollectionChanged += (s, e) => { IsChanged = true; };
         }
     }
 }

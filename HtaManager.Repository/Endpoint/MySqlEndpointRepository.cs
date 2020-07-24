@@ -81,7 +81,12 @@ namespace HtaManager.Repository.Endpoint
             return endpointDescriptorList;
         }
 
-        public bool SaveEndpointDescriptor(EndpointDescriptor EndpointDescriptor)
+        public int SaveEndpointDescriptor(EndpointDescriptorViewModel endpointDescriptorViewModel)
+        {
+            return SaveEndpointDescriptor(EndpointDescriptor.FromViewModel(endpointDescriptorViewModel));
+        }
+
+        public int SaveEndpointDescriptor(EndpointDescriptor EndpointDescriptor)
         {
             Connect();
 
@@ -98,7 +103,6 @@ namespace HtaManager.Repository.Endpoint
                 cmdPrefix = "INSERT INTO endpoint_descriptor SET";
             }
 
-
             cmdText = cmdPrefix + " endpoint_descriptor_name = ?endpoint_descriptor_name, abbreviation = ?abbreviation, parent_id = ?parent_id, endpoint_descriptor_dimension = ?endpoint_descriptor_dimension" + cmdSuffix;
 
             MySqlCommand cmd = connection.CreateCommand();
@@ -106,9 +110,9 @@ namespace HtaManager.Repository.Endpoint
 
             cmd.Parameters.AddWithValue("?endpoint_descriptor_name", EndpointDescriptor.Name);
             cmd.Parameters.AddWithValue("?abbreviation", EndpointDescriptor.Abbreviation);
-            if (EndpointDescriptor.Parent != null)
+            if (EndpointDescriptor.ParentId > 0)
             {
-                cmd.Parameters.AddWithValue("?parent_id", EndpointDescriptor.Parent.Id);
+                cmd.Parameters.AddWithValue("?parent_id", EndpointDescriptor.ParentId);
             }
             else
             {
@@ -118,11 +122,23 @@ namespace HtaManager.Repository.Endpoint
             cmd.Parameters.AddWithValue("?endpoint_descriptor_dimension", EndpointDescriptor.Dimension.ToString().ToLower());
 
             int rowCount = cmd.ExecuteNonQuery();
-
-            EndpointDescriptor.Id = Convert.ToInt32(cmd.LastInsertedId);
             Disconnect();
 
-            return rowCount > 0;
+            if (rowCount > 0)
+            {
+                if (cmd.LastInsertedId > 0)
+                {
+                    return Convert.ToInt32(cmd.LastInsertedId);
+                }
+                else
+                {
+                    return EndpointDescriptor.Id;
+                }
+            }
+            else
+            {
+                return EndpointDescriptor.Id;
+            }         
         }
 
         public bool DeleteEndpointDescriptor(EndpointDescriptor EndpointDescriptor)

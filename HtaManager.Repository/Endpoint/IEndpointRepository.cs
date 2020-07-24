@@ -7,6 +7,7 @@ namespace HtaManager.Repository.Endpoint
     {
         bool DeleteEndpointDescriptor(EndpointDescriptor EndpointDescriptor);
         List<EndpointDescriptor> GetEndpointDescriptorList();
-        bool SaveEndpointDescriptor(EndpointDescriptor EndpointDescriptor);
+        int SaveEndpointDescriptor(EndpointDescriptor EndpointDescriptor);
+        int SaveEndpointDescriptor(EndpointDescriptorViewModel EndpointDescriptor);
     }
 }

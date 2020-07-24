@@ -7,17 +7,23 @@ using System.Threading.Tasks;
 
 namespace HtaManager.Infrastructure.Domain
 {
-    class OutcomeMeasureViewModel : ViewModelBase
+    public class OutcomeMeasureViewModel : ViewModelBase
     {
         public int Id {get;set;}
 
-        public EndpointDescriptor EndpointDescriptor { get; set; }
+        private EndpointDescriptorViewModel endpointDescriptor;
+        public EndpointDescriptorViewModel EndpointDescriptor
+        {
+            get => endpointDescriptor;
+            set => SetProperty(ref endpointDescriptor, value);
+        }
+
         public Study Study { get; set; }
 
         private string name;
         public string Name
         {
-            get => Name;
+            get => name;
             set => SetProperty(ref name, value);
         }
 
@@ -40,6 +46,22 @@ namespace HtaManager.Infrastructure.Domain
         {
             get => description;
             set => SetProperty(ref description, value);
+        }
+
+        public OutcomeMeasureViewModel()
+        {
+
+        }
+
+        public OutcomeMeasureViewModel(OutcomeMeasure outcomeMeasure)
+        {
+            this.Description = outcomeMeasure.Description;
+            this.EndpointDescriptor = new EndpointDescriptorViewModel(outcomeMeasure.EndpointDescriptor);
+            this.EndpointPriority = outcomeMeasure.EndpointPriority;
+            this.Id = outcomeMeasure.Id;
+            this.Name = outcomeMeasure.Name;
+            this.Study = outcomeMeasure.Study;
+            this.TimeFrame = outcomeMeasure.TimeFrame;
         }
     }
 }

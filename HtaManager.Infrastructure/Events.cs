@@ -13,4 +13,5 @@ namespace HtaManager.Infrastructure
     public class SelectedEndpointTypeChangedEvent : PubSubEvent<EndpointDescriptor> { }
     public class SelectedStudyChangedEvent : PubSubEvent<Study> { }
     public class TranslateStudyEvent : PubSubEvent { }
+    public class SelectedEndpointDescriptorChangedEvent: PubSubEvent<EndpointDescriptor> { }
 }

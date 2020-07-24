@@ -25,5 +25,26 @@ namespace HtaManager.Infrastructure.Domain
         {
             ChildList = new List<EndpointDescriptor>();
         }
+
+        
+        public static EndpointDescriptor FromViewModel(EndpointDescriptorViewModel endpointDescriptor)
+        {
+            EndpointDescriptor result = new EndpointDescriptor();
+
+            if (endpointDescriptor != null)
+            {
+                result.Id = endpointDescriptor.Id;
+                result.Abbreviation = endpointDescriptor.Abbreviation;
+                result.AbbreviationEN = endpointDescriptor.AbbreviationEN;
+                result.ChildList = new List<EndpointDescriptor>(endpointDescriptor.ChildList.Select(item => EndpointDescriptor.FromViewModel(item)));
+                result.Dimension = endpointDescriptor.Dimension;
+                result.Id = endpointDescriptor.Id;
+                result.Name = endpointDescriptor.Name;
+                result.NameEN = endpointDescriptor.NameEN;
+                result.ParentId = endpointDescriptor.ParentId;
+            }
+
+            return result;
+        }
     }
 }

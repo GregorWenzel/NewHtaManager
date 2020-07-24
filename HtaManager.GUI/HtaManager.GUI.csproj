@@ -76,6 +76,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EndpointDescriptorSelector\EndpointDescriptorSelectorView.xaml.cs">
+      <DependentUpon>EndpointDescriptorSelectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EndpointDescriptorSelector\EndpointDescriptorSelectorViewModel.cs" />
+    <Compile Include="EndpointEditor\EndpointEditorView.xaml.cs">
+      <DependentUpon>EndpointEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EndpointEditor\EndpointEditorViewModel.cs" />
     <Compile Include="GUIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -141,6 +149,14 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="EndpointDescriptorSelector\EndpointDescriptorSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EndpointEditor\EndpointEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SplashScreen\SplashScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

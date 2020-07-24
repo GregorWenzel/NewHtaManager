@@ -1,4 +1,5 @@
-﻿using HtaManager.GUI.StudyArmEditor;
+﻿using HtaManager.GUI.EndpointEditor;
+using HtaManager.GUI.StudyArmEditor;
 using HtaManager.Infrastructure.Domain;
 using HtaManager.Infrastructure.Mvvm;
 using HtaManager.Repository;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Telerik.Windows.Controls;
 using Unity;
@@ -39,10 +41,16 @@ namespace HtaManager.GUI.StudyEditor
             get => new Prism.Commands.DelegateCommand(OnBackToModelSelection);
         }
 
-        public Prism.Commands.DelegateCommand<MouseButtonEventArgs> MouseDoubleClickCommand
+        public Prism.Commands.DelegateCommand<MouseButtonEventArgs> ShowStudyArmCommand
         {
-            get => new Prism.Commands.DelegateCommand<MouseButtonEventArgs>(OnMouseDoubleClicked);        
+            get => new Prism.Commands.DelegateCommand<MouseButtonEventArgs>(OnShowStudyArm);        
         }
+
+        public Prism.Commands.DelegateCommand<MouseButtonEventArgs> ShowEndpointCommand
+        {
+            get => new Prism.Commands.DelegateCommand<MouseButtonEventArgs>(OnShowEndpoint);
+        }
+
         public Prism.Commands.DelegateCommand AddStudyArm
         {
             get => new Prism.Commands.DelegateCommand(OnAddStudyArm);
@@ -276,28 +284,47 @@ namespace HtaManager.GUI.StudyEditor
             regionManager.RequestNavigate(RegionNames.StudyDesignRegion, "ModelSelectionView");
         }
 
-        private void OnMouseDoubleClicked(MouseButtonEventArgs obj)
+        private void OnShowStudyArm(MouseButtonEventArgs obj)
         {
             StudyArmViewModel studyArm = (obj.Source as RadGridView).SelectedItem as StudyArmViewModel;
 
             OpenStudyArmEditor(studyArm);
         }
 
+        private void OnShowEndpoint(MouseButtonEventArgs obj)
+        {
+            OutcomeMeasureViewModel endpoint = (obj.Source as RadListBox).SelectedItem as OutcomeMeasureViewModel;
+            RadWindow endpointEditorWindow = new RadWindow();            
+            EndpointEditorView endpointEditorView = new EndpointEditorView();
+            EndpointEditorViewModel endpointEditorViewModel = new EndpointEditorViewModel();
+            endpointEditorViewModel.SelectedEndpoint = endpoint;
+            endpointEditorView.DataContext = endpointEditorViewModel;
+            endpointEditorWindow.Content = endpointEditorView;
+            endpointEditorWindow.Loaded += (s, e) =>
+            {
+                endpointEditorWindow.Width = 800;
+                endpointEditorWindow.Height = 800;
+                endpointEditorWindow.Header = "Endpunkt-Editor";
+                endpointEditorWindow.ParentOfType<Window>().ShowInTaskbar = true;
+            };
+            endpointEditorWindow.ShowDialog();
+        }
+
         private bool? OpenStudyArmEditor(StudyArmViewModel studyArm)
         { 
             RadWindow studyArmEditorWindow = new RadWindow();
             studyArmEditorWindow.Header = "Studienarm-Editor";
-
             StudyArmEditorView studyArmEditorView = new StudyArmEditorView();
-            
-            StudyArmEditorViewModel studyArmEditorViewModel = new StudyArmEditorViewModel();
+            StudyArmEditor.StudyArmEditorViewModel studyArmEditorViewModel = new StudyArmEditor.StudyArmEditorViewModel();
             studyArmEditorViewModel.SelectedStudyArm = studyArm;
-
             studyArmEditorView.DataContext = studyArmEditorViewModel;
-
             studyArmEditorWindow.Content = studyArmEditorView;
+            studyArmEditorWindow.Loaded += (s, e) => { 
+                studyArmEditorWindow.ParentOfType<Window>().ShowInTaskbar = true; 
+            };
+            studyArmEditorWindow.ShowDialog();
 
-            return studyArmEditorWindow.ShowDialog();
+            return studyArmEditorWindow.DialogResult;
         }
 
         private void OnAddStudyArm()
